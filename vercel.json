@@ -21,5 +21,29 @@
       "maxDuration": 30,
       "excludeFiles": "{tests/**,src/**,shots/**,*.png,*.svg,README.md}"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.inboxjev.dev"
+        }
+      ],
+      "destination": "https://inboxjev.dev/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "inbox-jev-site.vercel.app"
+        }
+      ],
+      "destination": "https://inboxjev.dev/$1",
+      "permanent": true
+    }
+  ]
 }
