@@ -414,7 +414,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <span class="cross bl" aria-hidden="true">+</span><span class="cross br" aria-hidden="true">+</span>
   <div class="roundels" aria-hidden="true"><span class="roundel">Free</span><span class="roundel">MIT</span><span class="roundel">0.1.0</span></div>
   <h1 data-rise style="--i:0">inbox-jev</h1>
-  <p class="sub" data-rise style="--i:1">Sorts your Gmail every ten minutes: keeps what needs you, archives what can wait, unsubscribes from pitches, and learns from your fixes.</p>
+  <p class="sub" data-rise style="--i:1">Every ten minutes it labels each new email in your Gmail with Jev, archives receipts, notifications, newsletters and pitches, and unsubscribes you from the pitches it can verify. Fix a label in Gmail and it learns.</p>
   <div class="actions" data-rise style="--i:2">
     <a class="pill primary" href="#install">Install in two commands</a>
     <a class="link" href="#how">How it decides</a>
@@ -428,8 +428,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         {{frag:inbox}}
         </div></figure>
         <div data-rise style="--i:1">
-          <h3>What needs you stays, the rest leaves</h3>
-          <p>Eight categories, one Gmail label each. What needs you stays; receipts, notifications, newsletters, promos and pitches leave. Anything Jev isn't sure about stays in front of you with Jev/Review.</p>
+          <h3>Only mail that needs you stays in the inbox</h3>
+          <p>Each email gets one of eight labels. Personal mail, and automated mail that asks you to do something, stay in the inbox. Receipts, notifications, newsletters, promotions and sales pitches are archived. When Jev isn't sure enough, the email stays where it is with Jev/Review and its best guess.</p>
           <div class="tags"><span class="tag">Labels</span><span class="tag">Archive</span><span class="tag">Needs reply</span></div>
           <a class="pill" href="#categories">See the categories</a>
         </div>
@@ -442,8 +442,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         {{frag:run}}
         </div></figure>
         <div data-rise style="--i:2">
-          <h3>One run, every ten minutes, on your machine</h3>
-          <p>A launchd or systemd timer runs the pass. Each email gets a category, a confidence and an action, and every decision is written to SQLite, where it can be audited and undone.</p>
+          <h3>A pass runs every ten minutes on your own machine</h3>
+          <p>A launchd or systemd timer starts it. Each email gets a category, a confidence and an action, and the decision goes into a SQLite database so you can look it up later or undo it.</p>
           <div class="tags"><span class="tag">CLI</span><span class="tag">Python 3.11+</span><span class="tag">SQLite</span></div>
           <a class="pill" href="#how">Follow one email through</a>
         </div>
@@ -475,7 +475,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div class="label"><span>How it decides</span><span>Fig. 3</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">How it decides<span class="count">(8)</span></h2>
-      <p data-rise style="--i:1">Every email takes the same path. Pick one of the eight in the figure, all taken from the worked examples the test suite runs against the real code, and follow it to what Gmail shows you afterwards.</p>
+      <p data-rise style="--i:1">Every email goes through the same steps. The eight in the figure are worked examples from the spec, and each one is also a test that runs the real code. Pick one and follow it to what Gmail shows afterwards.</p>
     </div>
     <figure class="flowfig" data-rise style="--i:2">
       <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 3 ] THE PER-EMAIL PIPELINE</span><span class="r">&#8801;</span></div><div class="win-body">
@@ -484,15 +484,15 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       </div>
       <div class="verdict" aria-live="polite">
         <div><p class="v-subj" id="v-subj">Re: quick question about your pipeline · sam@growthagency.example</p><p class="v-title" id="v-title">Archived with Jev/Outreach, unsubscribed with one click</p></div>
-        <div><p class="v-body" id="v-body">Cold outreach at 0.96, above its 0.90 bar. The sender passes DMARC in Gmail's own headers, sends a List-Unsubscribe header, isn't a group and isn't anyone you wrote to, and the mode is act: one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.</p><p class="v-ref" id="v-ref">Spec example EX-04. A test with the same id runs the real code.</p></div>
+        <div><p class="v-body" id="v-body">Jev says cold outreach at 0.96, above the 0.90 bar. The sender passes DMARC in Gmail's own headers, the email has a List-Unsubscribe header, the sender isn't a group or anyone you have written to, and the account is in act mode, so one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.</p><p class="v-ref" id="v-ref">Spec example EX-04. A test with the same id runs the real code.</p></div>
       </div></div>
-      <figcaption>The per-email pipeline of the spec, with its two flowcharts folded into one picture. Two routes never reach Jev: the allowlist and the sender rules decide on the spot. The unsubscribe gate sits on the two bottom archive rows and is spelled out under "What it does".</figcaption>
+      <figcaption>The spec's per-email pipeline, with its two flowcharts drawn as one. Allowlisted senders and senders with a rule never reach Jev. The unsubscribe gate sits on the two bottom archive rows and is spelled out under "What it does".</figcaption>
     </figure>
     <div class="after">
       <div class="steps">
-        <div data-rise style="--i:1"><div class="label"><span>Your rules first</span></div><h3>Decided without a call</h3><p><strong>The allowlist and the sender rules</strong> decide on the spot. Rules come from your corrections, from <code>rules set</code>, or on their own after three answers at 0.95 or more.</p></div>
-        <div data-rise style="--i:2"><div class="label"><span>Then Jev</span></div><h3>Headers, first lines, signals</h3><p><strong>The domains links point to,</strong> Gmail's SPF, DKIM and DMARC verdicts, and whether you ever wrote to the sender. Never a URL, never a stored body. Jev answers one category and how sure it is.</p></div>
-        <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>Confidence becomes an action</h3><p><strong>At or above the category's bar,</strong> its action. Archive categories that together reach 0.90, archived. Anything else stays in the inbox with Jev/Review and nothing destructive happens.</p></div>
+        <div data-rise style="--i:1"><div class="label"><span>Your rules first</span></div><h3>Your rules decide first</h3><p>An allowlisted sender, or a sender with a rule, is decided without asking Jev. Rules come from your corrections, from <code>rules set</code>, or appear on their own after Jev has answered the same category three times at 0.95 or more.</p></div>
+        <div data-rise style="--i:2"><div class="label"><span>Then Jev</span></div><h3>Jev reads the headers and the first lines</h3><p>It also gets the domains the links point to, Gmail's own SPF, DKIM and DMARC verdicts, and whether you have ever written to the sender. It never gets a full URL, and the body is never stored. It answers with one category and how sure it is.</p></div>
+        <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>The confidence picks the action</h3><p>If it reaches the category's bar, that category's action runs. If several archive categories add up to 0.90, the email is archived under the strongest of them. Anything else stays in the inbox with Jev/Review.</p></div>
       </div>
     </div>
   </div>
@@ -507,28 +507,28 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     </div>
     <div class="cells">
       <article class="cell text-top" data-rise style="--i:0">
-        <div class="cell-text"><div class="label"><span>Labels</span></div><h3>Labels you can read</h3><p>Eight categories, one label each, under a single Jev/ prefix, plus Needs Reply, Invoices and Review for whatever Jev isn't sure about. Rename them or add your own in categories.yaml, no code involved.</p></div>
+        <div class="cell-text"><div class="label"><span>Labels</span></div><h3>One Gmail label per category</h3><p>The eight categories each get a label under the Jev/ prefix. Three more can appear next to them: Jev/Needs Reply, Jev/Invoices, and Jev/Review for the emails Jev isn't sure about. You can rename them or add a category in categories.yaml without touching code.</p></div>
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:labels}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:1">
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:archlog}}</div></div></div>
-        <div class="cell-text"><div class="label"><span>Archive</span></div><h3>Archives what can wait</h3><p>Receipts, notifications, newsletters, promos and pitches leave the inbox once Jev is at least 0.80 sure, 0.90 where it also unsubscribes. Below that the email stays, with Jev/Review and the suggested label.</p></div>
+        <div class="cell-text"><div class="label"><span>Archive</span></div><h3>Archives what has nothing for you to do</h3><p>Receipts, notifications, newsletters, promotions and pitches are archived once Jev is at least 0.80 sure, or 0.90 for the two categories it also unsubscribes from. Below the bar the email stays in the inbox with Jev/Review and the label Jev would have used.</p></div>
       </article>
       <article class="cell text-top" data-rise style="--i:2">
-        <div class="cell-text"><div class="label"><span>Unsubscribe</span></div><h3>Unsubscribes only from senders it can verify</h3><p>Only marketing and cold outreach at 0.90 or more, from a sender with a DMARC pass and a List-Unsubscribe header, not a group, not anyone you ever wrote to, in act mode. One-click per RFC 8058, else a mailto:, else a link in your digest.</p></div>
+        <div class="cell-text"><div class="label"><span>Unsubscribe</span></div><h3>Unsubscribes only from senders it can verify</h3><p>It unsubscribes only from marketing and cold outreach, when Jev is at least 0.90 sure, the sender passes DMARC and sends a List-Unsubscribe header, the sender is not a group or anyone you have written to, and the account is in act mode. If the sender offers RFC 8058 one-click it uses that, otherwise the mailto: address, otherwise it leaves the link in your digest.</p></div>
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:gate}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:3">
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:learns}}</div></div></div>
-        <div class="cell-text"><div class="label"><span>Corrections</span></div><h3>Learns from one swapped label</h3><p>Swap a label, remove Jev/Review or move an archived email back: the next run records a correction and a rule for that sender. Three consistent answers at 0.95 or more make a rule on their own. Starred mail is never touched.</p></div>
+        <div class="cell-text"><div class="label"><span>Corrections</span></div><h3>Learns from your corrections</h3><p>When you swap a label, remove Jev/Review or move an archived email back to the inbox, the next pass records the correction and writes a rule for that sender. Jev's own answers make a rule too, after three of the same category at 0.95 or more. Starred mail is left alone.</p></div>
       </article>
       <article class="cell text-top" data-rise style="--i:4">
-        <div class="cell-text"><div class="label"><span>Digest</span></div><h3>A digest, not a dashboard</h3><p>One Slack message every morning, in English or Spanish: how many emails need you and which, what Jev did, who you were unsubscribed from and what it learned from your fixes. Readable on a phone in a few seconds.</p></div>
+        <div class="cell-text"><div class="label"><span>Digest</span></div><h3>One Slack message every morning</h3><p>At 08:00 it sends a Slack message, in English or Spanish, with the emails that need you, what it archived, which lists it unsubscribed you from and what it learned from your corrections. It is short enough to read on a phone.</p></div>
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:digest}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:5">
         <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 9 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:modes}}</div></div></div>
-        <div class="cell-text"><div class="label"><span>Undo</span></div><h3>Every action recorded, every action undoable</h3><p>Each decision lands in SQLite with its confidence and probabilities. Three modes let you watch for a week before anything moves: dry_run records, label only labels, act acts. One command moves a day's archived mail back.</p></div>
+        <div class="cell-text"><div class="label"><span>Undo</span></div><h3>Everything it does can be undone</h3><p>Each decision is stored in SQLite with its confidence and the probabilities Jev gave. You can run it in dry_run for a week and read what it would have done, then in label, which only adds labels, before you let act move anything. One command moves a day's archived mail back to the inbox.</p></div>
       </article>
     </div>
   </div>
@@ -540,7 +540,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div class="label"><span>Categories</span><span>Fig. 10 and 11</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Categories<span class="count">(8)</span></h2>
-      <p data-rise style="--i:1">The defaults shipped with the package, one inbox owner's preferences. Tune the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
+      <p data-rise style="--i:1">These are the defaults the package ships with, and they are one person's preferences. You can change the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
     </div>
     <div class="ledger-grid">
       <aside class="side" data-rise style="--i:0">
@@ -556,7 +556,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       <div class="ledger" data-rise style="--i:1">
         <details open><summary><span class="tag">Keep</span><span class="name">Jev/Important</span><span class="conf">No bar</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>stays in the inbox</span></div>
-          <p class="desc">Written by a real person specifically to you: clients, teammates, partners, investors, candidates, decisions and questions addressed to you. Not mass mail that only greets you by name. Allowlisted senders and emails you pull back to the inbox land here.</p>
+          <p class="desc">Written by a real person specifically to you: clients, teammates, partners, investors, candidates, decisions and questions addressed to you. It is not mass mail that only greets you by name. Allowlisted senders and emails you pull back to the inbox land here.</p>
         </div></details>
         <details><summary><span class="tag">Keep</span><span class="name">Jev/Action</span><span class="conf">No bar</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>stays in the inbox</span></div>
@@ -568,11 +568,11 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         </div></details>
         <details><summary><span class="tag">Archive</span><span class="name">Jev/Notifications</span><span class="conf">Bar 0.80</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>archived</span></div>
-          <p class="desc">FYI alerts and digests from the tools you use: GitHub, Slack, Calendar, Drive, Jira, Linear, analytics, monitoring, CI. Reminders of meetings already in your calendar and plain "Accepted" replies to invitations you sent. Nothing for you to do.</p>
+          <p class="desc">FYI alerts and digests from the tools you use: GitHub, Slack, Calendar, Drive, Jira, Linear, analytics, monitoring, CI. Reminders of meetings already in your calendar and plain "Accepted" replies to invitations you sent. There is nothing for you to do with them.</p>
         </div></details>
         <details><summary><span class="tag">Archive</span><span class="name">Jev/Newsletters</span><span class="conf">Bar 0.80</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>archived, never unsubscribed</span></div>
-          <p class="desc">Editorial content you subscribed to: newsletters, digests, blog updates, industry news. Informative rather than selling.</p>
+          <p class="desc">Editorial content you subscribed to: newsletters, digests, blog updates, industry news. It informs rather than sells.</p>
         </div></details>
         <details><summary><span class="tag">Archive + unsub</span><span class="name">Jev/Marketing</span><span class="conf">Bar 0.90</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>archived and unsubscribed</span></div>
@@ -599,12 +599,12 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       <h2 data-rise style="--i:0">Before you let it touch your mail<span class="count">(6)</span></h2>
     </div>
     <div class="qa">
-      <div data-rise style="--i:0"><h3>What does it never do?</h3><p>It never deletes anything. It never unsubscribes without a DMARC pass and a List-Unsubscribe header, never through a group or a discussion list, never from someone you have written to, never below 0.90, and never in dry_run or label mode. It never archives starred mail, mail you restored, or mail whose labels you edited by hand. Below a category's bar nothing destructive happens at all.</p></div>
-      <div data-rise style="--i:0"><h3>What does it send to Jev?</h3><p>The headers that matter, the first characters of the body, the domains the links point to (never a URL), Gmail's SPF, DKIM and DMARC verdicts, and whether you ever wrote to the sender. Bodies are never stored in the database or logged: only sender, subject and the classification. The sent-mail search reads To, Cc and Bcc of your sent emails, never their text.</p></div>
-      <div data-rise style="--i:0"><h3>How do I start without risk?</h3><p>Run dry_run for a week: every decision is recorded and the digest tells you what it would have done, while nothing in Gmail changes and no rule is learned. Switch to label when the categories look right, and to act when the labels do, all at once or category by category with act_categories.</p></div>
-      <div data-rise style="--i:0"><h3>What if it gets one wrong?</h3><p>Fix it in Gmail: swap the label, remove Jev/Review, or move the email back to the inbox. The next run records the correction and a rule for that sender, and tomorrow's digest lists what it learned. To undo a day, inbox-jev restore --since 1d moves everything archived or spammed back and forgets its labels. An unsubscribe can't be undone, which is why it has the longest list of conditions.</p></div>
-      <div data-rise style="--i:0"><h3>Where does it run?</h3><p>On your Mac or Linux machine, as a launchd or systemd user timer: a triage pass every ten minutes and the digest at 08:00, installed with inbox-jev schedule install. Or on a server with Docker and systemd timers, with a staleness watchdog, nightly backups and Slack alerts. One copy per account, never two.</p></div>
-      <div data-rise style="--i:0"><h3>Why trust the rules?</h3><p>Every rule is written down twice: as a functional spec with 50 worked examples, each one a test that runs the real code, and as 53 architecture decision records that keep the alternatives that were rejected. A change to how it decides is checked against real mail before it merges.</p></div>
+      <div data-rise style="--i:0"><h3>What does it never do?</h3><p>It never deletes an email. It unsubscribes only when the sender passes DMARC and the email has a List-Unsubscribe header, and even then only when the sender is not a group or a discussion list, you have never written to them, Jev is at 0.90 or more and the account is in act mode. Starred mail, mail you moved back and mail whose labels you edited by hand are left alone. Below a category's bar it does nothing that would need undoing.</p></div>
+      <div data-rise style="--i:0"><h3>What does it send to Jev?</h3><p>The headers that matter, the first characters of the body, the domains the links point to without the rest of the URL, Gmail's SPF, DKIM and DMARC verdicts, and whether you have ever written to the sender. The database and the log keep the sender, the subject and the classification, and never the body. The search of your sent mail reads only the To, Cc and Bcc fields.</p></div>
+      <div data-rise style="--i:0"><h3>How do I start without risk?</h3><p>Run it in dry_run for a week. Every decision is recorded and the digest tells you what it would have done, but nothing in Gmail changes and no rule is learned. Switch to label when the categories look right, and to act when the labels do, for every category at once or one at a time with act_categories.</p></div>
+      <div data-rise style="--i:0"><h3>What if it gets one wrong?</h3><p>Fix it in Gmail. Swap the label, remove Jev/Review or move the email back to the inbox, and the next pass records the correction and a rule for that sender. Tomorrow's digest lists what it learned. To undo a whole day, inbox-jev restore --since 1d moves everything archived or spammed back and removes its labels. An unsubscribe can't be undone, which is why it has the longest list of conditions.</p></div>
+      <div data-rise style="--i:0"><h3>Where does it run?</h3><p>On your Mac or Linux machine, as a launchd or systemd user timer that inbox-jev schedule install sets up, with a pass every ten minutes and the digest at 08:00. It can also run on a server with Docker and systemd timers, with a watchdog for stale runs, nightly backups and Slack alerts. Run one copy per account.</p></div>
+      <div data-rise style="--i:0"><h3>Why trust the rules?</h3><p>Every rule is written down twice. The functional spec has 50 worked examples, and each one is a test that runs the real code. The 53 architecture decision records say why each rule is the way it is and which alternatives were rejected. A change to how it decides is checked against real mail before it is merged.</p></div>
     </div>
   </div>
 </section>
@@ -615,7 +615,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div class="label"><span>Install</span><span>Fig. 12</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Install it in two commands</h2>
-      <p data-rise style="--i:1">Free, MIT-licensed, yours to run. You bring a TypeSafe API key and a Google OAuth client of your own, the wizard walks you through both, Slack is optional. Nothing of yours passes through anyone's server but Google's and TypeSafe's.</p>
+      <p data-rise style="--i:1">It is free, MIT licensed, and runs on your own machine. You need a TypeSafe API key and a Google OAuth client of your own, and the setup wizard walks you through both. Slack is optional. Your email goes to Google and to TypeSafe, and to no other server.</p>
     </div>
     <div class="gh gh-install" data-rise style="--i:2" aria-label="inbox-jev on GitHub"><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.6l2 4.1 4.5.6-3.3 3.2.8 4.5L8 11.9 4 14l.8-4.5-3.3-3.2 4.5-.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Star<b class="cnt" data-count="stargazers_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/fork"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="3.2" r="1.6"/><circle cx="12" cy="3.2" r="1.6"/><circle cx="8" cy="12.8" r="1.6"/><path d="M4 4.8v1.4c0 1 .8 1.8 1.8 1.8h4.4c1 0 1.8-.8 1.8-1.8V4.8M8 8v3.2"/></g></svg>Fork<b class="cnt" data-count="forks_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/issues"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/></svg>Issues<b class="cnt" data-count="open_issues_count" hidden></b></a></div>
 
@@ -624,12 +624,12 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <h3>Python 3.11 or newer, uv or pipx</h3>
         <p>The first command installs the tool. The second asks for your TypeSafe key, walks you through a Google OAuth client of your own, authorizes your Gmail and offers a first dry run. Then <code>inbox-jev schedule install</code> runs it every ten minutes.</p>
         <div class="copy"><code id="install-cmd"><span class="nw">uv tool install inbox-jev</span> &amp;&amp; <span class="nw">inbox-jev init</span></code><button type="button" class="pill" id="copy-btn">Copy</button></div>
-        <p class="small">Run from a checkout of the repo, it uses the checkout instead. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
+        <p class="small">If you run it from a checkout of the repo, it uses the checkout. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
       </div>
       <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 12 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:init}}</div></figure>
     </div>
     <div class="more">
-      <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md" data-rise style="--i:0"><span class="m-k">Guide</span><span class="m-t">The plain-language guide, for the inbox owner</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
+      <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md" data-rise style="--i:0"><span class="m-k">Guide</span><span class="m-t">The guide in plain words, for the person whose inbox it sorts</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
       <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md" data-rise style="--i:1"><span class="m-k">Spec</span><span class="m-t">How it decides, in full, with the 50 worked examples</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
       <a href="https://github.com/hellolitebox/litebox-inbox-jev" data-rise style="--i:2"><span class="m-k">GitHub</span><span class="m-t">Source, issues and the 53 decision records</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
     </div>
@@ -641,8 +641,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <div class="read" id="jev-read">
     <div class="label"><span>This page, as Jev would read it</span><span>From inbox-jev-site.vercel.app · to you</span></div>
     <div class="meter"><span>Outreach <b id="jr-c">0.96</b></span><span class="m-bar" role="meter" aria-label="Outreach confidence" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.96"><i id="jr-fill" style="width:96%"></i><u></u></span><span>Bar 0.90</span></div>
-    <div id="jr-reading" hidden><p class="r-v">Still reading. Under the bar, nothing happens.</p><p class="r-ref">The bar is 0.90 · keep scrolling</p></div>
-    <div id="jr-done"><p class="r-v"><span class="chip">Jev/Outreach</span>Cold outreach at <b id="jr-cd">0.96</b>, over the bar: archived. No List-Unsubscribe header, nothing to click.</p><p class="r-ref">Conversation archived · <a href="#jev-read" id="jr-undo">Undo</a> · <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md">EX-04 in the spec ↗</a></p></div>
+    <div id="jr-reading" hidden><p class="r-v">Still reading. Below the bar, the email stays where it is.</p><p class="r-ref">The bar is 0.90 · keep scrolling</p></div>
+    <div id="jr-done"><p class="r-v"><span class="chip">Jev/Outreach</span>Cold outreach at <b id="jr-cd">0.96</b>, above the bar, so it gets archived. No List-Unsubscribe header, so nothing to click.</p><p class="r-ref">Conversation archived · <a href="#jev-read" id="jr-undo">Undo</a> · <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md">EX-04 in the spec ↗</a></p></div>
   </div>
   <p class="giant" aria-hidden="true">inbox-jev</p>
   <div class="foot-grid">
@@ -664,13 +664,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   // The eight emails, what the spec says happens to each.
   var EX = {
     ex15a: { subj: 'Signed contract by Friday? · ana@client.example', title: 'Stays in the inbox with Jev/Important and Jev/Needs Reply', body: 'You once moved mail from this address back to the inbox, so it has a rule: important. Jev isn\'t asked for a category, only whether this needs a reply (it does, at 0.92). No sent-mail search runs and nothing counts toward a new rule.', ref: 'Spec example EX-15. A test with the same id runs the real code.' },
-    ex02: { subj: 'Approve payment to Acme Supplies · alerts@bank.example', title: 'Stays in the inbox with Jev/Action and Jev/Needs Reply', body: 'Jev: action required at 0.93, and it expects something from you (0.85). A keep category has no bar to clear. It leads tomorrow\'s digest. The answer doesn\'t count toward an automatic rule, so this sender keeps going through Jev.', ref: 'Spec example EX-02. A test with the same id runs the real code.' },
-    ex04: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, unsubscribed with one click', body: 'Cold outreach at 0.96, above its 0.90 bar. The sender passes DMARC in Gmail\'s own headers, sends a List-Unsubscribe header, isn\'t a group and isn\'t anyone you wrote to, and the mode is act: one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.', ref: 'Spec example EX-04. A test with the same id runs the real code.' },
-    ex01: { subj: 'Your weekly product analytics · digest@analytics.example', title: 'Archived with Jev/Notifications, through the archive group', body: 'Jev splits it: notification 0.55, newsletter 0.42. Neither clears 0.80, but together the archive categories reach 0.97, above the 0.90 floor: Jev is sure it goes away, just not under which label. The group never unsubscribes or spams.', ref: 'Spec example EX-01. A test with the same id runs the real code.' },
-    ex38: { subj: 'RE: Updated permit schedule for review · noreply@dailywire-news.example', title: 'Moved to Spam with Jev/Spam', body: 'A "RE:" that answers no thread, a "voice letter" with a play button, links to two domains unrelated to the sender, and a conversation between other people pasted in. Jev gets those signals, never the URLs, and calls it spam at 0.95, above the 0.90 bar.', ref: 'Spec example EX-38. A test with the same id runs the real code.' },
-    ex15b: { subj: 'This week in product · news@weekly.example', title: 'Archived with Jev/Newsletters, without asking Jev', body: 'This sender has an automatic rule: Jev answered newsletter three times at 0.95 or more, in label or act mode, with no keep signal. An archive rule skips the Jev call. Pull one issue back to the inbox and the rule flips to important.', ref: 'Spec example EX-15. A test with the same id runs the real code.' },
-    ex05: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, not unsubscribed', body: 'Same pitch, same 0.96, but your sent mail holds an email to Sam. Cold outreach never unsubscribes from someone you wrote to: an opt-out could cover all of that company\'s mail, and a pitch from a known contact is where a classifier is most often wrong.', ref: 'Spec example EX-05. A test with the same id runs the real code.' },
-    ex16: { subj: 'Announcing our spring collection · hello@brand.example', title: 'Stays in the inbox with Jev/Review and Jev/Newsletters', body: 'Jev hesitates: newsletter 0.50, marketing 0.45. Below every bar, and in this inbox marketing\'s bar was raised to 0.95, so it doesn\'t count toward the archive group either. Nothing destructive happens. Remove Jev/Review and the next run learns a rule.', ref: 'Spec example EX-16. A test with the same id runs the real code.' }
+    ex02: { subj: 'Approve payment to Acme Supplies · alerts@bank.example', title: 'Stays in the inbox with Jev/Action and Jev/Needs Reply', body: 'Jev says action required at 0.93, and that it expects something from you at 0.85. A keep category has no bar to clear, so it stays and leads tomorrow\'s digest. The answer doesn\'t count toward an automatic rule, so this sender keeps going through Jev.', ref: 'Spec example EX-02. A test with the same id runs the real code.' },
+    ex04: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, unsubscribed with one click', body: 'Jev says cold outreach at 0.96, above the 0.90 bar. The sender passes DMARC in Gmail\'s own headers, the email has a List-Unsubscribe header, the sender isn\'t a group or anyone you have written to, and the account is in act mode, so one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.', ref: 'Spec example EX-04. A test with the same id runs the real code.' },
+    ex01: { subj: 'Your weekly product analytics · digest@analytics.example', title: 'Archived with Jev/Notifications, through the archive group', body: 'Jev is torn between notification at 0.55 and newsletter at 0.42. Neither reaches 0.80 on its own, but the archive categories add up to 0.97, above the 0.90 floor, so Jev is sure the email can leave the inbox even if it isn\'t sure under which label. The archive group never unsubscribes and never moves anything to Spam.', ref: 'Spec example EX-01. A test with the same id runs the real code.' },
+    ex38: { subj: 'RE: Updated permit schedule for review · noreply@dailywire-news.example', title: 'Moved to Spam with Jev/Spam', body: 'The subject starts with "RE:" but answers no thread, the body is a "voice letter" with a play button, the links go to two domains unrelated to the sender, and a conversation between other people is pasted in. Jev gets those signals, without the URLs, and calls it spam at 0.95, above the 0.90 bar.', ref: 'Spec example EX-38. A test with the same id runs the real code.' },
+    ex15b: { subj: 'This week in product · news@weekly.example', title: 'Archived with Jev/Newsletters, without asking Jev', body: 'This sender has an automatic rule because Jev answered newsletter three times at 0.95 or more, in label or act mode, with no sign that it needed keeping. A rule for an archive category skips the call to Jev. If you pull one issue back to the inbox, the rule flips to important.', ref: 'Spec example EX-15. A test with the same id runs the real code.' },
+    ex05: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, not unsubscribed', body: 'Same pitch, same 0.96, but your sent mail has an email to Sam. Cold outreach never unsubscribes from someone you have written to, because an opt-out could cover all of that company\'s mail, and a pitch from a known contact is where a classifier is most often wrong.', ref: 'Spec example EX-05. A test with the same id runs the real code.' },
+    ex16: { subj: 'Announcing our spring collection · hello@brand.example', title: 'Stays in the inbox with Jev/Review and Jev/Newsletters', body: 'Jev hesitates between newsletter at 0.50 and marketing at 0.45, both below their bars. This inbox raised marketing\'s bar to 0.95, so marketing doesn\'t count toward the archive group either, and the email stays where it is. Remove Jev/Review and the next pass learns a rule.', ref: 'Spec example EX-16. A test with the same id runs the real code.' }
   };
   var OUTS = { ex15a: 'important', ex02: 'action', ex04: 'outreach', ex01: 'notification', ex38: 'spam', ex15b: 'newsletter', ex05: 'outreach', ex16: 'review' };
 

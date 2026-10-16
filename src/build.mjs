@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 export const SITE = 'https://inbox-jev-site.vercel.app';
-const DESCRIPTION = "inbox-jev sorts your Gmail every ten minutes with the Jev classifier: keeps what needs you, archives what can wait, unsubscribes from pitches it can verify, and learns from your fixes. Free, MIT, runs on your machine.";
+const DESCRIPTION = "inbox-jev reads your Gmail every ten minutes, labels each email with the Jev classifier, archives receipts, notifications, newsletters and pitches, unsubscribes from the pitches it can verify, and learns from your corrections. Free, MIT licensed, runs on your own machine.";
 
 // Outcome rows (index → label, action, group)
 const OUT = [
