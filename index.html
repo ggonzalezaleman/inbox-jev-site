@@ -504,7 +504,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div>
       <div class="label"><span>The inbox, after one pass</span></div>
       <div class="feat">
-        <figure class="win shutter" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 1 ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.03">
+        <figure class="win shutter" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ INBOX ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.03">
         <div class="gm">
           <div class="row"><span class="cb"></span><span class="from u">Ana Diaz</span><span class="chip c-imp">Jev/Important</span><span class="chip c-rep">Jev/Needs Reply</span><span class="subj u">Signed contract by Friday? <span>— Hi, can you confirm the signature date so…</span></span><span class="time">9:04 AM</span></div>
           <div class="row sel"><span class="cb"></span><span class="from u">Acme Bank</span><span class="chip c-act">Jev/Action</span><span class="subj u">Approve payment to Acme Supplies <span>— A payment of $2,400.00 is waiting for your…</span></span><span class="time">8:51 AM</span></div>
@@ -528,7 +528,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div>
       <div class="label"><span>The pass itself</span></div>
       <div class="feat">
-        <figure class="win" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 2 ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.05">
+        <figure class="win" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ RUN LOG ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.05">
         <pre class="term" id="run-log"><b>$ inbox-jev run -a you@example.com --mode act</b>
 <span class="d">09:10:03</span> run started account=you@example.com mode=act lookback=2d
 <span class="d">09:10:05</span> message processed category=<i>marketing</i> confidence=0.94 action=archive_unsubscribe previous_contact=never archive_group=false timings_ms={gmail:212,rule:3,sent:0,jev:1480,apply:160}
@@ -576,13 +576,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ Playground ============================ -->
 <section class="block" id="try">
   <div class="wrap">
-    <div class="label"><span>Playground</span><span>Fig. 3</span></div>
+    <div class="label"><span>Playground</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
       <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
     </div>
     <figure class="win try" data-ui style="margin:0">
-      <div class="win-bar"><span>&gt;_</span><span>[ FIG. 3 ]</span><span class="r">&#8801;</span></div>
+      <div class="win-bar"><span>&gt;_</span><span>[ PLAYGROUND ]</span><span class="r">&#8801;</span></div>
       <div class="win-body">
         <form class="try-in" id="try-form" novalidate>
           <div class="try-samples" role="group" aria-label="Sample emails">
@@ -607,13 +607,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ How it decides ============================ -->
 <section class="block" id="how">
   <div class="wrap">
-    <div class="label"><span>How it decides</span><span>Fig. 4</span></div>
+    <div class="label"><span>How it decides</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">How it decides<span class="count">(8)</span></h2>
       <p data-rise style="--i:1">Every email goes through the same steps. The eight in the figure are worked examples from the spec, and each one is also a test that runs the real code. Pick one and follow it to what Gmail shows afterwards.</p>
     </div>
     <figure class="flowfig" data-rise style="--i:2">
-      <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ] THE PER-EMAIL PIPELINE</span><span class="r">&#8801;</span></div><div class="win-body">
+      <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ THE PER-EMAIL PIPELINE ]</span><span class="r">&#8801;</span></div><div class="win-body">
       <svg class="flow flow-desktop" viewBox="0 0 1200 490" role="img" aria-label="Eight real emails traced through inbox-jev: your rules decide first, the rest go to Jev, then policy turns Jev's confidence into an action.">
   <text x="0" y="22" class="cap">Eight emails from the spec · pick one</text>
   <text x="960" y="22" class="cap">Stays in the inbox</text>
@@ -820,7 +820,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ What it does ============================ -->
 <section class="block" id="does">
   <div class="wrap">
-    <div class="label"><span>What it does</span><span>Fig. 5</span></div>
+    <div class="label"><span>What it does</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">What it does to your inbox<span class="count">(6)</span></h2>
     </div>
@@ -834,7 +834,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-modes" id="tab-modes" data-rise style="--i:5"><span class="does-k">Undo</span><h3>Everything it does can be undone</h3><p>Every decision is in SQLite. Watch it in dry_run, then label, before act moves anything. One command brings a day's mail back.</p></div>
       </div>
       <figure class="win does-win" data-ui style="margin:0" data-rise>
-        <div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 · LABELS ]</span><span class="r">&#8801;</span></div>
+        <div class="win-bar"><span>&gt;_</span><span>[ LABELS ]</span><span class="r">&#8801;</span></div>
         <div class="win-body">
           <div class="does-pane is-on" id="does-labels" role="tabpanel" aria-labelledby="tab-labels"><div class="labels">
           <div class="l sel"><span>Jev/Action</span><span class="n">5</span></div>
@@ -900,7 +900,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
 <!-- ============================ Categories ============================ -->
 <section class="block" id="categories">
   <div class="wrap">
-    <div class="label"><span>Categories</span><span>Fig. 6 and 7</span></div>
+    <div class="label"><span>Categories</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Categories<span class="count">(8)</span></h2>
       <p data-rise style="--i:1">These are the defaults the package ships with, and they are one person's preferences. You can change the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
@@ -909,7 +909,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
       <aside class="side" data-rise style="--i:0">
         <div>
           <div class="label"><span>categories.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ categories.yaml ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
 <span class="k">categories:</span>
   - <span class="k">key:</span> marketing
     <span class="k">label:</span> Jev/Marketing
@@ -922,7 +922,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
         </div>
         <div>
           <div class="label"><span>accounts.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ accounts.yaml ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
 <span class="k">accounts:</span>
   - <span class="k">email:</span> you@example.com
     <span class="k">mode:</span> act
@@ -993,7 +993,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
 <!-- ============================ Install ============================ -->
 <section class="block" id="install">
   <div class="wrap">
-    <div class="label"><span>Install</span><span>Fig. 8</span></div>
+    <div class="label"><span>Install</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Install it in two commands</h2>
       <p data-rise style="--i:1">It is free, MIT licensed, and runs on your own machine. You need a TypeSafe API key and a Google OAuth client of your own, and the setup wizard walks you through both. Slack is optional. Your email goes to Google and to TypeSafe, and to no other server.</p>
@@ -1007,7 +1007,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
         <div class="copy"><code id="install-cmd"><span class="nw">uv tool install inbox-jev</span> &amp;&amp; <span class="nw">inbox-jev init</span></code><button type="button" class="pill" id="copy-btn">Copy</button></div>
         <p class="small">If you run it from a checkout of the repo, it uses the checkout. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
       </div>
-      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><b>$ inbox-jev init</b>
+      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ inbox-jev init ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><b>$ inbox-jev init</b>
 [1/5] TypeSafe API key      checked, saved to .env
 [2/5] Google OAuth client   found in ~/Downloads, copied
 [3/5] Slack bot token       skipped
@@ -1257,7 +1257,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
         r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
         var pane = document.getElementById(r.getAttribute('aria-controls')); if (pane) pane.classList.toggle('is-on', on);
       });
-      if (doesBar) doesBar.textContent = '[ FIG. 5 · ' + row.querySelector('.does-k').textContent.toUpperCase() + ' ]';
+      if (doesBar) doesBar.textContent = '[ ' + row.querySelector('.does-k').textContent.toUpperCase() + ' ]';
       doesPlace();
       if (focusIt) row.focus();
     };
