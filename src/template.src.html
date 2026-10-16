@@ -1,0 +1,740 @@
+<title>inbox-jev</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Headline:wght@300&family=Stack+Sans+Text:wght@400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a developer ledger in the manner of stripe.dev. Deep navy ground, one pale ink, a light
+   display face set very tight, monospaced uppercase labels with a leading slash, hairlines between
+   rows, figures in window frames, outlined pills, amber counters. One look, committed: dark only. */
+:root {
+  --bg: #0a1829; --surface: #0f2036; --surface-2: #16304a;
+  --line: #1d3450; --line-2: #2b4a68;
+  --ink: #c9d4df; --ink-strong: #e9eff5; --muted: #8aa5bd; --muted-2: #6f8dab;
+  --accent: #8fe3cf; --accent-ink: #0a1829; --amber: #f2a541; --violet: #b9a6f7; --frame: #c9d4df;
+  --display: 'Stack Sans Headline', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --text: 'Stack Sans Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --hero: clamp(60px, 11.6vw, 168px);
+  --h2: clamp(44px, 7.4vw, 108px);
+  --lg: clamp(24px, 1.5vw + 13px, 34px);
+  --md: clamp(22px, 1.9vw + 10px, 28px);
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --t-press: 140ms; --t-hover: 180ms; --t-reveal: 800ms;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--text); font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+h1, h2, h3 { font-family: var(--display); font-weight: 300; letter-spacing: -0.06em; line-height: 0.9; margin: 0; text-wrap: balance; color: var(--ink-strong); }
+h3 { letter-spacing: -0.04em; line-height: 1.02; }
+p { margin: 0; }
+a { color: inherit; }
+img { max-width: 100%; }
+code { font-family: var(--mono); font-size: 0.92em; }
+.wrap { max-width: 1440px; margin-inline: auto; padding-left: var(--gl); padding-right: var(--gr); }
+.mono, .label, .tag, .nav a, .stat, .kbd { font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; }
+.label { color: var(--muted); display: flex; justify-content: space-between; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.label > span:first-child::before { content: "/ "; }
+.count { font-family: var(--mono); font-weight: 300; font-size: 0.2em; letter-spacing: 0; color: var(--amber); vertical-align: top; position: relative; top: 0.35em; margin-left: 0.15em; text-transform: none; }
+.tag { display: inline-block; color: var(--violet); border: 1px dotted var(--violet); border-radius: 3px; padding: 3px 6px 3.5px; line-height: 1; white-space: nowrap; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.nw { white-space: nowrap; }
+.link { color: var(--accent); text-decoration: none; }
+.link::after { content: " \2197"; }
+.link:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.pill { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); background: transparent; font: 500 14px/1 var(--text); text-decoration: none; cursor: pointer; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, color var(--t-hover) ease; }
+.pill:active { transform: scale(0.97); }
+.pill.wide { width: 100%; }
+.pill.primary { background: var(--accent); color: var(--accent-ink); }
+.gh { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+.gh .pill { min-height: 36px; padding: 0 14px; font-size: 14px; gap: 8px; text-transform: none; letter-spacing: 0; }
+.gh .pill svg { flex: none; }
+.gh .cnt { font: 400 13px var(--mono); padding-left: 8px; margin-left: 2px; border-left: 1px solid currentColor; }
+.gh-install { margin: -24px 0 40px; }
+.nav a .cnt { font-weight: 300; margin-left: 6px; color: var(--amber); }
+[hidden] { display: none !important; }
+@media (hover: hover) and (pointer: fine) { .pill:hover { background: var(--accent); color: var(--accent-ink); } .pill.primary:hover { background: #b4f0e1; border-color: #b4f0e1; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.cross { position: absolute; font: 300 14px/1 var(--mono); color: var(--muted-2); pointer-events: none; }
+.rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
+.pair > *, .feat > *, .after > *, .steps > *, .cells > *, .ledger-grid > *, .side > *, .qa > div > *, .install-grid > *, .more > * { min-width: 0; }
+
+/* Window frames around every figure */
+.win { border: 2px solid var(--frame); background: var(--bg); overflow: hidden; display: flex; flex-direction: column; }
+.win-bar { height: 22px; flex: none; background: var(--frame); color: var(--bg); font: 300 13px/22px var(--mono); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 6px; }
+.win-bar .r { text-align: right; }
+.win-body { flex: 1; min-height: 0; overflow: hidden; position: relative; background-color: var(--bg); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ccircle cx='1' cy='1' r='1' fill='%232b4a68'/%3E%3C/svg%3E"); }
+.win-body > * { position: relative; }
+
+/* Nav: hotkey buttons */
+.nav { display: flex; gap: 8px; align-items: center; padding-block: 14px; flex-wrap: wrap; }
+.nav .mark { width: 24px; height: 24px; background: var(--accent); flex: none; clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%); }
+.nav a { display: inline-flex; align-items: center; min-height: 26px; padding: 0 8px; background: var(--surface-2); color: var(--accent); border-radius: 2px; text-decoration: none; transition: background-color var(--t-hover) ease, color var(--t-hover) ease; }
+.nav a .k { opacity: 0.75; margin-right: 6px; }
+.nav .sp { flex: 1; }
+@media (hover: hover) and (pointer: fine) { .nav a:hover { background: var(--accent); color: var(--accent-ink); } }
+
+/* Hero */
+.hero { position: relative; padding-block: 48px 36px; }
+.hero .cross.tl { top: 14px; left: var(--gl); } .hero .cross.tr { top: 14px; right: var(--gr); }
+.hero .cross.bl { bottom: 14px; left: var(--gl); } .hero .cross.br { bottom: 14px; right: var(--gr); }
+.hero h1 { font-size: var(--hero); letter-spacing: -0.07em; line-height: 0.82; white-space: nowrap; }
+.hero .sub { font-family: var(--display); font-weight: 300; letter-spacing: -0.05em; line-height: 1.05; font-size: var(--lg); color: var(--muted); max-width: 56ch; margin-top: 40px; }
+.hero .actions { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-top: 36px; }
+.roundels { position: absolute; top: 48px; right: var(--gr); display: flex; gap: 8px; }
+.roundel { width: 46px; height: 46px; border: 1px solid var(--amber); border-radius: 50%; color: var(--amber); font: 300 13px/44px var(--mono); text-align: center; text-transform: uppercase; }
+
+/* Featured pair: a figure and its text, hairline between the two halves */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 8px; }
+.feat { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; padding-top: 24px; }
+.feat .win { aspect-ratio: 16 / 9; max-width: 100%; }
+.feat .win-body { overflow: hidden; }
+.feat h3 { font-size: var(--md); }
+.feat p { color: var(--muted); margin-top: 10px; }
+.feat .tags { margin-top: 14px; }
+.feat .pill { margin-top: 18px; }
+.pair > div + div { border-left: 1px dashed var(--line-2); padding-left: 40px; margin-left: -40px; }
+
+/* Statistics strip */
+.stats { margin-top: 56px; }
+.stats-row { display: flex; flex-wrap: wrap; gap: 12px 16px; padding-block: 12px; }
+.stat { color: var(--accent); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; padding: 0 16px 0 0; border-right: 1px solid var(--line); }
+.stat:last-child { border-right: 0; }
+.stat b { font-weight: 300; border: 1px solid var(--line-2); border-radius: 2px; padding: 2px 6px; color: var(--accent); }
+
+/* Sections */
+section.block { padding-block: 120px 0; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin: 24px 0 48px; }
+.head h2 { font-size: var(--h2); }
+.head p { max-width: 50ch; color: var(--muted); font-size: 20px; line-height: 1.4; }
+
+/* How it decides */
+.flowfig { margin: 0; }
+.flow { display: block; width: 100%; height: auto; font-family: var(--text); }
+.flow-phone { display: none; }
+.flow text { fill: var(--ink); }
+.flow .cap { font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; fill: var(--muted); }
+.flow .t1 { font-size: 14px; font-weight: 500; }
+.flow .t2, .flow .g2, .flow .o2 { font-size: 12.5px; fill: var(--muted); }
+.flow .g1 { font-size: 14.5px; font-weight: 500; }
+.flow .o1 { font-size: 14px; font-weight: 500; }
+.flow .gate rect { fill: var(--surface); stroke: var(--line-2); stroke-width: 1; }
+.flow .mail rect { fill: var(--surface); stroke: var(--line); stroke-width: 1; transition: fill var(--t-hover) ease; cursor: pointer; }
+.flow .mail { cursor: pointer; outline: none; }
+.flow .mail:focus-visible rect { stroke: var(--accent); stroke-width: 2; }
+@media (hover: hover) and (pointer: fine) { .flow .mail:hover rect { fill: var(--surface-2); } }
+.flow .mail.is-on rect { fill: var(--accent); stroke: var(--accent); }
+.flow .mail.is-on text { fill: var(--accent-ink); }
+.flow .out rect { fill: var(--surface); stroke: var(--line); stroke-width: 1; transition: fill var(--t-hover) ease; }
+.flow .out.is-on rect { fill: var(--accent); stroke: var(--accent); }
+.flow .out.is-on text { fill: var(--accent-ink); }
+.flow .route { fill: none; stroke: var(--muted-2); stroke-opacity: 0.7; stroke-width: 3; transition: stroke-opacity var(--t-hover) ease, stroke var(--t-hover) ease; }
+.flow.has-sel .route { stroke-opacity: 0.3; }
+.flow.has-sel .route.is-on { stroke: var(--accent); stroke-opacity: 1; stroke-width: 5; }
+.flow.has-sel .mail:not(.is-on) text, .flow.has-sel .out:not(.is-on) .o2 { fill: var(--muted); }
+.flowfig figcaption { font-size: 14px; color: var(--muted); margin-top: 14px; max-width: 72ch; }
+.flowfig .win-body { padding: 24px; }
+.after { margin-top: 40px; border-top: 1px solid var(--line); }
+.flowfig .win { overflow: visible; }
+.verdict { position: sticky; bottom: 0; z-index: 2; background: var(--surface); border-top: 2px solid var(--frame); padding: 16px 24px 18px; display: grid; grid-template-columns: 5fr 7fr; gap: 8px 40px; align-items: start; }
+.verdict > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.verdict .v-subj { font: 300 13px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: -0.012em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verdict .v-title { font-family: var(--display); font-weight: 300; letter-spacing: -0.04em; font-size: 22px; line-height: 1.05; color: var(--ink-strong); }
+.verdict .v-body { color: var(--ink); font-size: 16px; line-height: 1.45; }
+.verdict .v-ref { font-size: 13px; color: var(--muted); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); }
+.steps > div { padding: 24px 24px 24px 32px; border-right: 1px solid var(--line); }
+.steps > div:last-child { border-right: 0; }
+.steps > div:first-child { padding-left: 0; }
+.steps h3 { font-size: 22px; margin: 10px 0 10px; }
+.steps p { color: var(--muted); }
+.steps p strong { color: var(--ink); font-weight: 500; }
+
+/* What it does: six cells on a hairline grid */
+.cells { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.cell { position: relative; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); height: 520px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.cell.frag-top { grid-template-rows: 1fr auto; }
+.cell-text { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
+.cell-text h3 { font-size: var(--md); margin-top: 10px; }
+.cell-text p { color: var(--muted); max-width: 40ch; }
+.cell .frag { position: relative; overflow: hidden; min-height: 0; margin: 0 0 0 24px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 32px), transparent); }
+.cell .frag .win { position: absolute; left: 0; right: -2px; min-height: 100%; }
+.cell.text-top .frag .win { top: 0; border-bottom: 0; }
+.cell.frag-top .frag .win { top: 0; }
+.cell.frag-top .frag { margin-top: 24px; }
+.cell .gm .time { display: none; }
+
+/* Categories: a ledger */
+.ledger-grid { display: grid; grid-template-columns: 3fr 9fr; gap: 40px; }
+.side .win { margin-top: 16px; }
+.side > div + div { margin-top: 32px; }
+.ledger { border-top: 1px solid var(--line); }
+.ledger details { border-bottom: 1px solid var(--line); }
+.ledger summary { list-style: none; display: grid; grid-template-columns: 150px 1fr auto 24px; gap: 20px; align-items: center; min-height: 64px; padding: 10px 0; cursor: pointer; }
+.ledger summary::-webkit-details-marker { display: none; }
+.ledger summary .name { font-family: var(--display); font-weight: 300; letter-spacing: -0.04em; font-size: var(--md); color: var(--ink-strong); line-height: 1; }
+.ledger summary .conf { font-family: var(--mono); font-weight: 300; font-size: 13px; color: var(--muted); text-transform: uppercase; }
+.ledger summary::after { content: "+"; font-family: var(--mono); font-weight: 300; font-size: 20px; color: var(--muted); text-align: right; transition: transform var(--t-hover) var(--ease-out); }
+.ledger details[open] summary::after { transform: rotate(45deg); }
+.ledger .body { padding: 0 0 24px 170px; display: grid; gap: 12px; max-width: 72ch; }
+.ledger .kv { display: flex; gap: 16px; font-family: var(--mono); font-weight: 300; font-size: 13px; text-transform: uppercase; color: var(--muted); }
+.ledger .kv span:last-child { color: var(--accent); }
+.ledger .desc { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .ledger summary:hover .name { color: var(--accent); } }
+
+/* Free */
+
+/* Questions */
+.qa { border-top: 1px solid var(--line); }
+.qa > div { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; padding-block: 40px; border-bottom: 1px solid var(--line); }
+.qa h3 { font-size: var(--md); }
+.qa p { max-width: 62ch; color: var(--ink); }
+
+/* Install */
+.install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.install-grid h3 { font-size: var(--md); }
+.install-grid p { color: var(--muted); margin-top: 12px; max-width: 54ch; }
+.copy { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-2); border-radius: 2px; padding: 6px 6px 6px 16px; margin-top: 24px; width: min(100%, 560px); }
+.copy code { flex: 1; min-width: 0; font: 400 14px/1.4 var(--mono); color: var(--accent); white-space: nowrap; overflow-x: auto; user-select: all; }
+.copy .pill { min-height: 36px; padding: 0 16px; font-size: 14px; flex: none; }
+.install-grid .small { font-size: 14px; }
+.install-grid .win-body { min-height: 300px; }
+.more { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 48px; border-top: 1px solid var(--line); }
+.more a { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; row-gap: 8px; align-items: center; padding: 20px 24px 22px 0; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); color: var(--ink); text-decoration: none; transition: color var(--t-hover) ease; }
+.more a + a { padding-left: 24px; }
+.more a:last-child { border-right: 0; }
+.more .m-k { grid-column: 1; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted); }
+.more .m-k::before { content: "/ "; }
+.more .m-t { grid-column: 1; font: 500 17px/1.3 var(--text); }
+.more .m-a { grid-column: 2; grid-row: 1 / span 2; color: var(--accent); font-size: 22px; line-height: 1; transition: transform var(--t-hover) ease; }
+.more a:active { transform: scale(0.99); }
+@media (hover: hover) and (pointer: fine) { .more a:hover .m-t { color: var(--accent); } .more a:hover .m-a { transform: translate(2px, -2px); } }
+
+/* Footer */
+footer { padding-block: 120px 32px; position: relative; }
+footer .giant { font-size: var(--hero); letter-spacing: -0.07em; line-height: 0.82; color: var(--ink-strong); white-space: nowrap; }
+.foot-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.foot-grid ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.foot-grid li { font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; }
+.foot-grid li:first-child { color: var(--muted); margin-bottom: 6px; }
+.foot-grid li a { color: var(--ink); text-decoration: none; }
+.foot-grid li a:hover { color: var(--accent); }
+.foot-grid li code { font-size: 13px; text-transform: none; color: var(--ink); }
+.foot-grid .c1 { grid-column: 1 / 3; } .foot-grid .c2 { grid-column: 3 / 6; } .foot-grid .c3 { grid-column: 6 / 8; } .foot-grid .c4 { grid-column: 8 / 10; }
+.foot-grid .contact { grid-column: 10 / 13; display: flex; flex-direction: column; gap: 10px; font-family: var(--mono); font-weight: 300; font-size: 13px; text-transform: uppercase; color: var(--muted); }
+.foot-last { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-family: var(--mono); font-weight: 300; font-size: 13px; text-transform: uppercase; color: var(--muted); }
+
+/* Interface fragments: the product's own conventions apply inside [data-ui]. */
+[data-ui] { font-family: var(--text); font-size: 13px; line-height: 1.45; }
+[data-ui] pre { margin: 0; }
+[data-ui] pre.term, [data-ui] pre.yaml, [data-ui] pre.tbl { font-family: var(--mono); font-weight: 400; font-size: 12.5px; line-height: 1.6; color: var(--ink); padding: 14px 16px; white-space: pre; overflow: hidden; background: transparent; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent); }
+[data-ui] pre.term b, [data-ui] pre.tbl b { color: var(--ink-strong); font-weight: 500; }
+[data-ui] pre.term i { color: var(--accent); font-style: normal; }
+[data-ui] pre.term .d { color: var(--muted-2); }
+[data-ui] pre.yaml .k { color: var(--accent); }
+[data-ui] pre.yaml .c { color: var(--muted-2); }
+[data-ui] pre.tbl { font-variant-numeric: tabular-nums; }
+[data-ui] .gm { background: #fff; color: #202124; }
+[data-ui] .gm .row { display: flex; align-items: center; gap: 10px; padding: 0 12px; height: 40px; border-bottom: 1px solid #f1f3f4; white-space: nowrap; overflow: hidden; }
+[data-ui] .gm .row.sel { background: #f2f6fc; }
+[data-ui] .gm .cb { width: 14px; height: 14px; border: 2px solid #5f6368; border-radius: 2px; flex: none; }
+[data-ui] .gm .from { width: 120px; flex: none; overflow: hidden; text-overflow: ellipsis; }
+[data-ui] .gm .u { font-weight: 500; }
+[data-ui] .gm .chip { font-size: 11px; line-height: 16px; padding: 0 6px; border-radius: 4px; flex: none; }
+[data-ui] .gm .c-imp { background: #e8f0fe; color: #1967d2; }
+[data-ui] .gm .c-act { background: #fce8e6; color: #c5221f; }
+[data-ui] .gm .c-rep { background: #fef7e0; color: #8a4b00; }
+[data-ui] .gm .c-rev { background: #fff3cd; color: #7a5c00; }
+[data-ui] .gm .c-nl { background: #e6f4ea; color: #137333; }
+[data-ui] .gm .c-mk { background: #f3e8fd; color: #7627bb; }
+[data-ui] .gm .c-tr { background: #e8eaed; color: #3c4043; }
+[data-ui] .gm .c-out { background: #fce8e6; color: #a50e0e; }
+[data-ui] .gm .subj { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+[data-ui] .gm .subj span { color: #5f6368; }
+[data-ui] .gm .time { color: #5f6368; font-size: 12px; flex: none; width: 56px; text-align: right; }
+[data-ui] .labels { background: #fff; color: #202124; padding: 10px 0; min-width: 240px; }
+[data-ui] .labels .l { display: flex; justify-content: space-between; padding: 0 16px 0 26px; height: 32px; line-height: 32px; border-radius: 0 16px 16px 0; margin-right: 12px; }
+[data-ui] .labels .l.sel { background: #d3e3fd; font-weight: 500; }
+[data-ui] .labels .n { color: #5f6368; font-size: 12px; }
+[data-ui] .slack { background: #fff; color: #1d1c1d; padding: 14px 16px; min-width: 380px; font-size: 14px; line-height: 1.45; }
+[data-ui] .slack .who { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+[data-ui] .slack .av { width: 36px; height: 36px; background: var(--bg); color: var(--accent); font: 500 11px/36px var(--text); text-align: center; border-radius: 6px; }
+[data-ui] .slack .app { font-size: 10px; background: #e8e8e8; color: #616061; padding: 1px 4px; border-radius: 3px; margin-left: 4px; }
+[data-ui] .slack .ts { color: #616061; font-size: 12px; margin-left: 6px; }
+[data-ui] .slack .ctx { color: #616061; font-size: 12px; }
+[data-ui] .slack h4 { margin: 10px 0 2px; font: 500 14px/1.3 var(--text); }
+[data-ui] .slack ul { margin: 0; padding-left: 16px; }
+[data-ui] .slack a { color: #1264a3; text-decoration: none; }
+[data-ui] .slack table { color: inherit; border-collapse: collapse; margin-top: 4px; font-size: 13px; font-variant-numeric: tabular-nums; }
+[data-ui] .slack td { padding: 2px 10px 2px 0; }
+[data-ui] .slack td:last-child { text-align: right; }
+[data-ui] .gate { color: var(--ink); padding: 16px 18px; font-size: 14px; }
+[data-ui] .gate .q { display: flex; gap: 10px; align-items: baseline; padding: 5px 0; }
+[data-ui] .gate .q::before { content: ""; width: 10px; height: 10px; background: var(--accent); flex: none; transform: translateY(-1px); }
+[data-ui] .gate .then { margin-top: 10px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-strong); }
+[data-ui] .gate .then i { color: var(--accent); font-style: normal; }
+
+/* Motion: transform and opacity only; reduced motion keeps the resting state */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-rise] { opacity: 0; transform: translateY(20px); transition: opacity var(--t-reveal) var(--ease-out), transform var(--t-reveal) var(--ease-out); transition-delay: calc(var(--i, 0) * 80ms); }
+  .js [data-rise].is-in { opacity: 1; transform: none; }
+  .js .shutter { clip-path: inset(0 0 100% 0); transition: clip-path 1100ms var(--ease-in-out); }
+  .js .shutter .win-body > * { transform: scale(1.12); transform-origin: top left; transition: transform 1500ms var(--ease-soft); }
+  .js .shutter.is-in { clip-path: inset(0); }
+  .js .shutter.is-in .win-body > * { transform: none; }
+  .ledger .body { animation: open 240ms var(--ease-out); }
+  @keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+  .cell .frag .win { transition: transform 600ms var(--ease-soft); }
+  .cell:hover .frag .win { transform: translateY(-4px); }
+  .feat .win-body > * { transition: transform 900ms var(--ease-soft); }
+  .drift { will-change: transform; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Tablet and phone: a second composition */
+@media (max-width: 1100px) {
+  .flow-desktop { display: none; }
+  .flow-phone { display: block; max-width: 560px; margin: 0 auto; }
+  .verdict { grid-template-columns: 1fr; gap: 6px; }
+  .flowfig .win-body { padding: 16px; }
+  .steps > div { padding: 24px 24px 24px 0; }
+  .cells { grid-template-columns: repeat(2, 1fr); }
+  .ledger-grid { grid-template-columns: 1fr; gap: 32px; }
+  .side { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .side > div + div { margin-top: 0; }
+  .install-grid { grid-template-columns: 1fr; }
+  .pair { grid-template-columns: 1fr; gap: 48px; }
+  .pair > div + div { border-left: 0; padding-left: 0; margin-left: 0; }
+}
+@media (max-width: 760px) {
+  .nav { gap: 6px; }
+  .nav a .k { display: none; }
+  .nav .sp { display: none; }
+  .nav a.ext { display: none; }
+  .hero { padding-block: 24px 48px; }
+  .hero h1 { font-size: clamp(52px, 16vw, 90px); }
+  .hero .sub { margin-top: 24px; font-size: 24px; }
+  .hero .actions { margin-top: 24px; }
+  .hero .pill { width: 100%; }
+  .roundels { display: none; }
+  .feat { grid-template-columns: 1fr; }
+  .feat .win { aspect-ratio: 4 / 3; }
+  .gm .time { display: none; }
+  [data-ui] .gm .from { width: 96px; }
+  .stats { margin-top: 40px; }
+  .stats-row { row-gap: 10px; }
+  .stat { border-right: 0; padding: 0; width: 100%; justify-content: space-between; }
+  section.block { padding-block: 80px 0; }
+  .head { margin: 20px 0 32px; }
+  .head p { font-size: 17px; }
+  .steps { grid-template-columns: 1fr; }
+  .steps > div { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 0; }
+  .steps > div:last-child { border-bottom: 0; }
+  .verdict { padding: 12px 14px 14px; gap: 4px; }
+  .verdict .v-subj, .verdict .v-ref { display: none; }
+  .verdict .v-body { font-size: 13.5px; line-height: 1.35; }
+  .cells { grid-template-columns: 1fr; }
+  .cell, .cell.frag-top { height: auto; display: flex; flex-direction: column; }
+  .cell.frag-top { flex-direction: column-reverse; justify-content: flex-end; }
+  .cell-text { padding: 16px 20px 20px; }
+  .cell .frag { height: 240px; margin: 0 0 0 20px; flex: none; }
+  .cell:nth-child(even) .frag { margin: 0 20px 0 0; }
+  .cell.frag-top .frag { margin-top: 16px; }
+  .cell .frag .win { top: 0; bottom: auto; border-bottom: 2px solid var(--frame); }
+  .side { grid-template-columns: 1fr; }
+  .ledger summary { grid-template-columns: 1fr 24px; grid-template-areas: "name plus" "tag plus" "conf plus"; row-gap: 6px; padding: 14px 0; }
+  .ledger summary .tag { grid-area: tag; justify-self: start; }
+  .ledger summary .name { grid-area: name; font-size: 24px; }
+  .ledger summary .conf { grid-area: conf; }
+  .ledger summary::after { grid-area: plus; }
+  .ledger .body { padding-left: 0; }
+  .qa > div { grid-template-columns: 1fr; gap: 12px; padding-block: 28px; }
+  .copy { flex-direction: column; align-items: stretch; padding: 10px; }
+  .copy code { white-space: normal; word-break: normal; overflow-wrap: normal; }
+  .more { grid-template-columns: 1fr; }
+  .more a, .more a + a { border-right: 0; padding-left: 0; }
+  footer { padding-block: 80px 24px; }
+  footer .giant { font-size: clamp(52px, 16vw, 90px); }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .foot-grid .c1, .foot-grid .c2, .foot-grid .c3, .foot-grid .c4 { grid-column: auto; }
+  .foot-grid .contact { grid-column: 1 / 3; }
+  .foot-last { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<nav class="wrap nav" aria-label="Page">
+  <span class="mark" aria-hidden="true"></span>
+  <a href="#how" data-key="h"><span class="k">[H]</span>How it decides</a>
+  <a href="#does" data-key="w"><span class="k">[W]</span>What it does</a>
+  <a href="#categories" data-key="c"><span class="k">[C]</span>Categories</a>
+  <a href="#questions" data-key="q"><span class="k">[Q]</span>Questions</a>
+  <a href="#install" data-key="i"><span class="k">[I]</span>Install</a>
+  <span class="sp"></span>
+  <a class="ext" href="https://github.com/hellolitebox/litebox-inbox-jev" data-key="g"><span class="k">[G]</span>GitHub<b class="cnt" data-count="stargazers_count" hidden></b></a>
+  <a class="ext" href="https://github.com/hellolitebox/litebox-inbox-jev/fork" data-key="f"><span class="k">[F]</span>Fork<b class="cnt" data-count="forks_count" hidden></b></a>
+  <a class="ext" href="https://pypi.org/project/inbox-jev/" data-key="p"><span class="k">[P]</span>PyPI</a>
+</nav>
+
+<main>
+<!-- ============================ Hero ============================ -->
+<section class="hero wrap" id="top">
+  <span class="cross tl" aria-hidden="true">+</span><span class="cross tr" aria-hidden="true">+</span>
+  <span class="cross bl" aria-hidden="true">+</span><span class="cross br" aria-hidden="true">+</span>
+  <div class="roundels" aria-hidden="true"><span class="roundel">Free</span><span class="roundel">MIT</span><span class="roundel">0.1.0</span></div>
+  <h1 data-rise style="--i:0">inbox-jev</h1>
+  <p class="sub" data-rise style="--i:1">Sorts your Gmail every ten minutes: keeps what needs you, archives what can wait, unsubscribes from pitches, and learns from your fixes.</p>
+  <div class="actions" data-rise style="--i:2">
+    <a class="pill primary" href="#install">Install in two commands</a>
+    <a class="link" href="#how">How it decides</a>
+  </div>
+
+  <div class="pair" style="margin-top:64px">
+    <div>
+      <div class="label"><span>The inbox, after one pass</span></div>
+      <div class="feat">
+        <figure class="win shutter" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 1 ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.03">
+        {{frag:inbox}}
+        </div></figure>
+        <div data-rise style="--i:1">
+          <h3>What needs you stays, the rest leaves</h3>
+          <p>Eight categories, one Gmail label each. What needs you stays; receipts, notifications, newsletters, promos and pitches leave. Anything Jev isn't sure about stays in front of you with Jev/Review.</p>
+          <div class="tags"><span class="tag">Labels</span><span class="tag">Archive</span><span class="tag">Needs reply</span></div>
+          <a class="pill" href="#categories">See the categories</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="label"><span>The pass itself</span></div>
+      <div class="feat">
+        <figure class="win" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 2 ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.05">
+        {{frag:run}}
+        </div></figure>
+        <div data-rise style="--i:2">
+          <h3>One run, every ten minutes, on your machine</h3>
+          <p>A launchd or systemd timer runs the pass. Each email gets a category, a confidence and an action, and every decision is written to SQLite, where it can be audited and undone.</p>
+          <div class="tags"><span class="tag">CLI</span><span class="tag">Python 3.11+</span><span class="tag">SQLite</span></div>
+          <a class="pill" href="#how">Follow one email through</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="label"><span>Statistics</span></div>
+    <div class="stats-row" aria-label="Facts about the project">
+      <span class="stat">Price <b>free</b></span>
+      <span class="stat">Categories <b>8</b></span>
+      <span class="stat">Triage pass <b>every 10 min</b></span>
+      <span class="stat">Digest <b>daily 08:00</b></span>
+      <span class="stat">Archive bar <b>0.80</b></span>
+      <span class="stat">Unsubscribe bar <b>0.90</b></span>
+      <span class="stat">Worked examples <b>50</b></span>
+      <span class="stat">Decision records <b>53</b></span>
+      <span class="stat">Modes <b>dry_run · label · act</b></span>
+      <span class="stat">Licence <b>MIT</b></span>
+    </div>
+    <hr class="rule">
+  </div>
+</section>
+
+<!-- ============================ How it decides ============================ -->
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="label"><span>How it decides</span><span>Fig. 3</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">How it decides<span class="count">(8)</span></h2>
+      <p data-rise style="--i:1">Every email takes the same path. Pick one of the eight in the figure, all taken from the worked examples the test suite runs against the real code, and follow it to what Gmail shows you afterwards.</p>
+    </div>
+    <figure class="flowfig" data-rise style="--i:2">
+      <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 3 ] THE PER-EMAIL PIPELINE</span><span class="r">&#8801;</span></div><div class="win-body">
+      <!--DIAGRAM-DESKTOP-->
+      <!--DIAGRAM-PHONE-->
+      </div>
+      <div class="verdict" aria-live="polite">
+        <div><p class="v-subj" id="v-subj">Re: quick question about your pipeline · sam@growthagency.example</p><p class="v-title" id="v-title">Archived with Jev/Outreach, unsubscribed with one click</p></div>
+        <div><p class="v-body" id="v-body">Cold outreach at 0.96, above its 0.90 bar. The sender passes DMARC in Gmail's own headers, sends a List-Unsubscribe header, isn't a group and isn't anyone you wrote to, and the mode is act: one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.</p><p class="v-ref" id="v-ref">Spec example EX-04. A test with the same id runs the real code.</p></div>
+      </div></div>
+      <figcaption>The per-email pipeline of the spec, with its two flowcharts folded into one picture. Two routes never reach Jev: the allowlist and the sender rules decide on the spot. The unsubscribe gate sits on the two bottom archive rows and is spelled out under "What it does".</figcaption>
+    </figure>
+    <div class="after">
+      <div class="steps">
+        <div data-rise style="--i:1"><div class="label"><span>Your rules first</span></div><h3>Decided without a call</h3><p><strong>The allowlist and the sender rules</strong> decide on the spot. Rules come from your corrections, from <code>rules set</code>, or on their own after three answers at 0.95 or more.</p></div>
+        <div data-rise style="--i:2"><div class="label"><span>Then Jev</span></div><h3>Headers, first lines, signals</h3><p><strong>The domains links point to,</strong> Gmail's SPF, DKIM and DMARC verdicts, and whether you ever wrote to the sender. Never a URL, never a stored body. Jev answers one category and how sure it is.</p></div>
+        <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>Confidence becomes an action</h3><p><strong>At or above the category's bar,</strong> its action. Archive categories that together reach 0.90, archived. Anything else stays in the inbox with Jev/Review and nothing destructive happens.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ What it does ============================ -->
+<section class="block" id="does">
+  <div class="wrap">
+    <div class="label"><span>What it does</span><span>Fig. 4 to 9</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">What it does to your inbox<span class="count">(6)</span></h2>
+    </div>
+    <div class="cells">
+      <article class="cell text-top" data-rise style="--i:0">
+        <div class="cell-text"><div class="label"><span>Labels</span></div><h3>Labels you can read</h3><p>Eight categories, one label each, under a single Jev/ prefix, plus Needs Reply, Invoices and Review for whatever Jev isn't sure about. Rename them or add your own in categories.yaml, no code involved.</p></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:labels}}</div></div></div>
+      </article>
+      <article class="cell frag-top" data-rise style="--i:1">
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:archlog}}</div></div></div>
+        <div class="cell-text"><div class="label"><span>Archive</span></div><h3>Archives what can wait</h3><p>Receipts, notifications, newsletters, promos and pitches leave the inbox once Jev is at least 0.80 sure, 0.90 where it also unsubscribes. Below that the email stays, with Jev/Review and the suggested label.</p></div>
+      </article>
+      <article class="cell text-top" data-rise style="--i:2">
+        <div class="cell-text"><div class="label"><span>Unsubscribe</span></div><h3>Unsubscribes only from senders it can verify</h3><p>Only marketing and cold outreach at 0.90 or more, from a sender with a DMARC pass and a List-Unsubscribe header, not a group, not anyone you ever wrote to, in act mode. One-click per RFC 8058, else a mailto:, else a link in your digest.</p></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:gate}}</div></div></div>
+      </article>
+      <article class="cell frag-top" data-rise style="--i:3">
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:learns}}</div></div></div>
+        <div class="cell-text"><div class="label"><span>Corrections</span></div><h3>Learns from one swapped label</h3><p>Swap a label, remove Jev/Review or move an archived email back: the next run records a correction and a rule for that sender. Three consistent answers at 0.95 or more make a rule on their own. Starred mail is never touched.</p></div>
+      </article>
+      <article class="cell text-top" data-rise style="--i:4">
+        <div class="cell-text"><div class="label"><span>Digest</span></div><h3>A digest, not a dashboard</h3><p>One Slack message every morning, in English or Spanish: how many emails need you and which, what Jev did, who you were unsubscribed from and what it learned from your fixes. Readable on a phone in a few seconds.</p></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:digest}}</div></div></div>
+      </article>
+      <article class="cell frag-top" data-rise style="--i:5">
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 9 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:modes}}</div></div></div>
+        <div class="cell-text"><div class="label"><span>Undo</span></div><h3>Every action recorded, every action undoable</h3><p>Each decision lands in SQLite with its confidence and probabilities. Three modes let you watch for a week before anything moves: dry_run records, label only labels, act acts. One command moves a day's archived mail back.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ Categories ============================ -->
+<section class="block" id="categories">
+  <div class="wrap">
+    <div class="label"><span>Categories</span><span>Fig. 10 and 11</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">Categories<span class="count">(8)</span></h2>
+      <p data-rise style="--i:1">The defaults shipped with the package, one inbox owner's preferences. Tune the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
+    </div>
+    <div class="ledger-grid">
+      <aside class="side" data-rise style="--i:0">
+        <div>
+          <div class="label"><span>categories.yaml</span></div>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 10 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:catyaml}}</div></div>
+        </div>
+        <div>
+          <div class="label"><span>accounts.yaml</span></div>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 11 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:accyaml}}</div></div>
+        </div>
+      </aside>
+      <div class="ledger" data-rise style="--i:1">
+        <details open><summary><span class="tag">Keep</span><span class="name">Jev/Important</span><span class="conf">No bar</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>stays in the inbox</span></div>
+          <p class="desc">Written by a real person specifically to you: clients, teammates, partners, investors, candidates, decisions and questions addressed to you. Not mass mail that only greets you by name. Allowlisted senders and emails you pull back to the inbox land here.</p>
+        </div></details>
+        <details><summary><span class="tag">Keep</span><span class="name">Jev/Action</span><span class="conf">No bar</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>stays in the inbox</span></div>
+          <p class="desc">Automated email that needs you to do something: approve a payment, update an expiring card, verify a domain, sign a document, fix something before a deadline. Also a lead from your own website's form, a meeting someone booked with you, and a calendar invitation waiting on your answer.</p>
+        </div></details>
+        <details><summary><span class="tag">Archive</span><span class="name">Jev/Transactional</span><span class="conf">Bar 0.80</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>archived</span></div>
+          <p class="desc">The record of something you did or bought, with nothing left to do: receipts, paid invoices, order and booking confirmations, shipping updates, verification codes, copies of documents you already signed.</p>
+        </div></details>
+        <details><summary><span class="tag">Archive</span><span class="name">Jev/Notifications</span><span class="conf">Bar 0.80</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>archived</span></div>
+          <p class="desc">FYI alerts and digests from the tools you use: GitHub, Slack, Calendar, Drive, Jira, Linear, analytics, monitoring, CI. Reminders of meetings already in your calendar and plain "Accepted" replies to invitations you sent. Nothing for you to do.</p>
+        </div></details>
+        <details><summary><span class="tag">Archive</span><span class="name">Jev/Newsletters</span><span class="conf">Bar 0.80</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>archived, never unsubscribed</span></div>
+          <p class="desc">Editorial content you subscribed to: newsletters, digests, blog updates, industry news. Informative rather than selling.</p>
+        </div></details>
+        <details><summary><span class="tag">Archive + unsub</span><span class="name">Jev/Marketing</span><span class="conf">Bar 0.90</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>archived and unsubscribed</span></div>
+          <p class="desc">Promotional email from a legitimate company: ads, sales, discounts, launches, webinars, event promotions, upsells. Unsubscribed only when the sender passes DMARC and offers a List-Unsubscribe header.</p>
+        </div></details>
+        <details><summary><span class="tag">Archive + unsub</span><span class="name">Jev/Outreach</span><span class="conf">Bar 0.90</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>archived and unsubscribed, never from a known contact</span></div>
+          <p class="desc">An unsolicited pitch from someone you have no relationship with, written to look personal: agencies, lead-gen, recruiting, "quick question" sequences, podcast and sponsorship invitations.</p>
+        </div></details>
+        <details><summary><span class="tag">Spam</span><span class="name">Jev/Spam</span><span class="conf">Bar 0.90</span></summary><div class="body">
+          <div class="kv"><span>Action</span><span>moved to Gmail's Spam</span></div>
+          <p class="desc">Scams and phishing: a reply that answers no thread, links to domains unrelated to the sender, a conversation between other people pasted into a message to you, an authentication pass that proves a domain other than the one it claims. Below 0.90 it stays in the inbox with Jev/Review, already labeled, for you to confirm.</p>
+        </div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ Questions ============================ -->
+<section class="block" id="questions">
+  <div class="wrap">
+    <div class="label"><span>Questions</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">Before you let it touch your mail<span class="count">(6)</span></h2>
+    </div>
+    <div class="qa">
+      <div data-rise style="--i:0"><h3>What does it never do?</h3><p>It never deletes anything. It never unsubscribes without a DMARC pass and a List-Unsubscribe header, never through a group or a discussion list, never from someone you have written to, never below 0.90, and never in dry_run or label mode. It never archives starred mail, mail you restored, or mail whose labels you edited by hand. Below a category's bar nothing destructive happens at all.</p></div>
+      <div data-rise style="--i:0"><h3>What does it send to Jev?</h3><p>The headers that matter, the first characters of the body, the domains the links point to (never a URL), Gmail's SPF, DKIM and DMARC verdicts, and whether you ever wrote to the sender. Bodies are never stored in the database or logged: only sender, subject and the classification. The sent-mail search reads To, Cc and Bcc of your sent emails, never their text.</p></div>
+      <div data-rise style="--i:0"><h3>How do I start without risk?</h3><p>Run dry_run for a week: every decision is recorded and the digest tells you what it would have done, while nothing in Gmail changes and no rule is learned. Switch to label when the categories look right, and to act when the labels do, all at once or category by category with act_categories.</p></div>
+      <div data-rise style="--i:0"><h3>What if it gets one wrong?</h3><p>Fix it in Gmail: swap the label, remove Jev/Review, or move the email back to the inbox. The next run records the correction and a rule for that sender, and tomorrow's digest lists what it learned. To undo a day, inbox-jev restore --since 1d moves everything archived or spammed back and forgets its labels. An unsubscribe can't be undone, which is why it has the longest list of conditions.</p></div>
+      <div data-rise style="--i:0"><h3>Where does it run?</h3><p>On your Mac or Linux machine, as a launchd or systemd user timer: a triage pass every ten minutes and the digest at 08:00, installed with inbox-jev schedule install. Or on a server with Docker and systemd timers, with a staleness watchdog, nightly backups and Slack alerts. One copy per account, never two.</p></div>
+      <div data-rise style="--i:0"><h3>Why trust the rules?</h3><p>Every rule is written down twice: as a functional spec with 50 worked examples, each one a test that runs the real code, and as 53 architecture decision records that keep the alternatives that were rejected. A change to how it decides is checked against real mail before it merges.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ Install ============================ -->
+<section class="block" id="install">
+  <div class="wrap">
+    <div class="label"><span>Install</span><span>Fig. 12</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">Install it in two commands</h2>
+      <p data-rise style="--i:1">Free, MIT-licensed, yours to run. You bring a TypeSafe API key and a Google OAuth client of your own, the wizard walks you through both, Slack is optional. Nothing of yours passes through anyone's server but Google's and TypeSafe's.</p>
+    </div>
+    <div class="gh gh-install" data-rise style="--i:2" aria-label="inbox-jev on GitHub"><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.6l2 4.1 4.5.6-3.3 3.2.8 4.5L8 11.9 4 14l.8-4.5-3.3-3.2 4.5-.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Star<b class="cnt" data-count="stargazers_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/fork"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="3.2" r="1.6"/><circle cx="12" cy="3.2" r="1.6"/><circle cx="8" cy="12.8" r="1.6"/><path d="M4 4.8v1.4c0 1 .8 1.8 1.8 1.8h4.4c1 0 1.8-.8 1.8-1.8V4.8M8 8v3.2"/></g></svg>Fork<b class="cnt" data-count="forks_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/issues"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/></svg>Issues<b class="cnt" data-count="open_issues_count" hidden></b></a></div>
+
+    <div class="install-grid">
+      <div data-rise style="--i:1">
+        <h3>Python 3.11 or newer, uv or pipx</h3>
+        <p>The first command installs the tool. The second asks for your TypeSafe key, walks you through a Google OAuth client of your own, authorizes your Gmail and offers a first dry run. Then <code>inbox-jev schedule install</code> runs it every ten minutes.</p>
+        <div class="copy"><code id="install-cmd"><span class="nw">uv tool install inbox-jev</span> &amp;&amp; <span class="nw">inbox-jev init</span></code><button type="button" class="pill" id="copy-btn">Copy</button></div>
+        <p class="small">Run from a checkout of the repo, it uses the checkout instead. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
+      </div>
+      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 12 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:init}}</div></figure>
+    </div>
+    <div class="more">
+      <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md" data-rise style="--i:0"><span class="m-k">Guide</span><span class="m-t">The plain-language guide, for the inbox owner</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
+      <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md" data-rise style="--i:1"><span class="m-k">Spec</span><span class="m-t">How it decides, in full, with the 50 worked examples</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
+      <a href="https://github.com/hellolitebox/litebox-inbox-jev" data-rise style="--i:2"><span class="m-k">GitHub</span><span class="m-t">Source, issues and the 53 decision records</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <p class="giant" aria-hidden="true">inbox-jev</p>
+  <div class="foot-grid">
+    <ul class="c1"><li>Project</li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev">GitHub</a></li><li><a href="https://pypi.org/project/inbox-jev/">PyPI</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/issues">Issues</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/LICENSE">MIT licence</a></li></ul>
+    <ul class="c2"><li>Read</li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md">The plain-language guide</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md">How it decides</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/decisions/README.md">Decision records</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Operations</a></li></ul>
+    <ul class="c3"><li>Commands</li><li><code>inbox-jev run</code></li><li><code>inbox-jev digest</code></li><li><code>inbox-jev restore</code></li><li><code>inbox-jev rules set</code></li></ul>
+    <ul class="c4"><li>On this page</li><li><a href="#how">How it decides</a></li><li><a href="#categories">Categories</a></li><li><a href="#questions">Questions</a></li><li><a href="#install">Install</a></li></ul>
+    <div class="contact"><p>Built by Litebox</p><p>Classifier: <a href="https://typesafe.ai" style="color:var(--accent);text-decoration:none">TypeSafe Jev</a></p></div>
+  </div>
+  <div class="foot-last"><p>© 2026 Litebox · MIT licence</p><div class="gh" aria-label="inbox-jev on GitHub"><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.6l2 4.1 4.5.6-3.3 3.2.8 4.5L8 11.9 4 14l.8-4.5-3.3-3.2 4.5-.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Star<b class="cnt" data-count="stargazers_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/fork"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="3.2" r="1.6"/><circle cx="12" cy="3.2" r="1.6"/><circle cx="8" cy="12.8" r="1.6"/><path d="M4 4.8v1.4c0 1 .8 1.8 1.8 1.8h4.4c1 0 1.8-.8 1.8-1.8V4.8M8 8v3.2"/></g></svg>Fork<b class="cnt" data-count="forks_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/issues"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/></svg>Issues<b class="cnt" data-count="open_issues_count" hidden></b></a></div></div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The eight emails, what the spec says happens to each.
+  var EX = {
+    ex15a: { subj: 'Signed contract by Friday? · ana@client.example', title: 'Stays in the inbox with Jev/Important and Jev/Needs Reply', body: 'You once moved mail from this address back to the inbox, so it has a rule: important. Jev isn\'t asked for a category, only whether this needs a reply (it does, at 0.92). No sent-mail search runs and nothing counts toward a new rule.', ref: 'Spec example EX-15. A test with the same id runs the real code.' },
+    ex02: { subj: 'Approve payment to Acme Supplies · alerts@bank.example', title: 'Stays in the inbox with Jev/Action and Jev/Needs Reply', body: 'Jev: action required at 0.93, and it expects something from you (0.85). A keep category has no bar to clear. It leads tomorrow\'s digest. The answer doesn\'t count toward an automatic rule, so this sender keeps going through Jev.', ref: 'Spec example EX-02. A test with the same id runs the real code.' },
+    ex04: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, unsubscribed with one click', body: 'Cold outreach at 0.96, above its 0.90 bar. The sender passes DMARC in Gmail\'s own headers, sends a List-Unsubscribe header, isn\'t a group and isn\'t anyone you wrote to, and the mode is act: one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.', ref: 'Spec example EX-04. A test with the same id runs the real code.' },
+    ex01: { subj: 'Your weekly product analytics · digest@analytics.example', title: 'Archived with Jev/Notifications, through the archive group', body: 'Jev splits it: notification 0.55, newsletter 0.42. Neither clears 0.80, but together the archive categories reach 0.97, above the 0.90 floor: Jev is sure it goes away, just not under which label. The group never unsubscribes or spams.', ref: 'Spec example EX-01. A test with the same id runs the real code.' },
+    ex38: { subj: 'RE: Updated permit schedule for review · noreply@dailywire-news.example', title: 'Moved to Spam with Jev/Spam', body: 'A "RE:" that answers no thread, a "voice letter" with a play button, links to two domains unrelated to the sender, and a conversation between other people pasted in. Jev gets those signals, never the URLs, and calls it spam at 0.95, above the 0.90 bar.', ref: 'Spec example EX-38. A test with the same id runs the real code.' },
+    ex15b: { subj: 'This week in product · news@weekly.example', title: 'Archived with Jev/Newsletters, without asking Jev', body: 'This sender has an automatic rule: Jev answered newsletter three times at 0.95 or more, in label or act mode, with no keep signal. An archive rule skips the Jev call. Pull one issue back to the inbox and the rule flips to important.', ref: 'Spec example EX-15. A test with the same id runs the real code.' },
+    ex05: { subj: 'Re: quick question about your pipeline · sam@growthagency.example', title: 'Archived with Jev/Outreach, not unsubscribed', body: 'Same pitch, same 0.96, but your sent mail holds an email to Sam. Cold outreach never unsubscribes from someone you wrote to: an opt-out could cover all of that company\'s mail, and a pitch from a known contact is where a classifier is most often wrong.', ref: 'Spec example EX-05. A test with the same id runs the real code.' },
+    ex16: { subj: 'Announcing our spring collection · hello@brand.example', title: 'Stays in the inbox with Jev/Review and Jev/Newsletters', body: 'Jev hesitates: newsletter 0.50, marketing 0.45. Below every bar, and in this inbox marketing\'s bar was raised to 0.95, so it doesn\'t count toward the archive group either. Nothing destructive happens. Remove Jev/Review and the next run learns a rule.', ref: 'Spec example EX-16. A test with the same id runs the real code.' }
+  };
+  var OUTS = { ex15a: 'important', ex02: 'action', ex04: 'outreach', ex01: 'notification', ex38: 'spam', ex15b: 'newsletter', ex05: 'outreach', ex16: 'review' };
+
+  var flows = document.querySelectorAll('.flow');
+  function select(id, animate) {
+    var ex = EX[id]; if (!ex) return;
+    flows.forEach(function (svg) {
+      svg.classList.add('has-sel');
+      svg.querySelectorAll('.is-on').forEach(function (el) { el.classList.remove('is-on'); });
+      svg.querySelectorAll('.mail[data-ex="' + id + '"]').forEach(function (el) { el.classList.add('is-on'); });
+      svg.querySelectorAll('.out[data-out="' + OUTS[id] + '"]').forEach(function (el) { el.classList.add('is-on'); });
+      var route = svg.querySelector('.route[data-for="' + id + '"]');
+      if (route) {
+        route.classList.add('is-on');
+        route.parentNode.appendChild(route);
+        if (animate && !reduce && route.animate) {
+          var len = route.getTotalLength();
+          route.style.strokeDasharray = len;
+          var a = route.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+          a.onfinish = function () { route.style.strokeDasharray = ''; };
+        }
+      }
+    });
+    document.getElementById('v-subj').textContent = ex.subj;
+    document.getElementById('v-title').textContent = ex.title;
+    document.getElementById('v-body').textContent = ex.body;
+    document.getElementById('v-ref').textContent = ex.ref;
+  }
+  flows.forEach(function (svg) {
+    svg.addEventListener('click', function (e) { var m = e.target.closest('.mail'); if (m) select(m.getAttribute('data-ex'), true); });
+    svg.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var m = e.target.closest('.mail'); if (m) { e.preventDefault(); select(m.getAttribute('data-ex'), true); }
+    });
+  });
+  select('ex04', false);
+
+  // Hotkeys, as the nav promises: a letter jumps to its section.
+  var keys = {};
+  document.querySelectorAll('.nav a[data-key]').forEach(function (a) { keys[a.getAttribute('data-key')] = a; });
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    var a = keys[e.key.toLowerCase()]; if (!a) return;
+    var href = a.getAttribute('href');
+    if (href.charAt(0) === '#') { var s = document.querySelector(href); if (s) { e.preventDefault(); s.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); } }
+    else { window.open(href, '_blank', 'noopener'); }
+  });
+
+  // Entrances: each part arrives once, in reading order.
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' }) : null;
+  document.querySelectorAll('[data-rise]').forEach(function (el) { if (io) io.observe(el); else el.classList.add('is-in'); });
+
+  // Signature move: the inbox figure opens like a shutter.
+  requestAnimationFrame(function () { requestAnimationFrame(function () {
+    document.querySelectorAll('.shutter').forEach(function (el) { el.classList.add('is-in'); });
+  }); });
+
+  // The two hero figures drift with the scroll, each at its own rate.
+  var drifts = document.querySelectorAll('.drift');
+  if (drifts.length && !reduce) {
+    var ticking = false;
+    var onScroll = function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () {
+        var y = window.scrollY || 0;
+        if (y < 1400) drifts.forEach(function (el) { el.style.transform = 'translateY(' + (y * parseFloat(el.getAttribute('data-k') || '0')).toFixed(1) + 'px)'; });
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Copy the install command.
+  var cmd = document.getElementById('install-cmd'), btn = document.getElementById('copy-btn');
+  if (btn) btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      try { var r = document.createRange(); r.selectNodeContents(cmd); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (err) {}
+      btn.textContent = 'Selected, press copy'; setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cmd.textContent).then(done, fallback); else fallback();
+  });
+  var counters = document.querySelectorAll('[data-count]');
+  if (counters.length && window.fetch) {
+    var repo = 'hellolitebox/litebox-inbox-jev', ghKey = 'gh:' + repo;
+    var fmt = function (n) { try { return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n); } catch (err) { return String(n); } };
+    var fill = function (d) { counters.forEach(function (el) { var v = d[el.getAttribute('data-count')]; if (typeof v === 'number') { el.textContent = fmt(v); el.hidden = false; } }); };
+    var cached = null; try { cached = JSON.parse(sessionStorage.getItem(ghKey)); } catch (err) {}
+    if (cached && cached.d && Date.now() - cached.t < 3600000) fill(cached.d);
+    else fetch('https://api.github.com/repos/' + repo, { headers: { Accept: 'application/vnd.github+json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (!d) return; var c = { stargazers_count: d.stargazers_count, forks_count: d.forks_count, open_issues_count: d.open_issues_count }; fill(c); try { sessionStorage.setItem(ghKey, JSON.stringify({ t: Date.now(), d: c })); } catch (err) {} })
+      .catch(function () {});
+  }
+})();
+</script>

@@ -1,0 +1,15 @@
+<pre class="term"><b>$ inbox-jev run -a you@example.com --mode act</b>
+<span class="d">09:10:03</span> run started account=you@example.com mode=act lookback=2d
+<span class="d">09:10:05</span> message processed category=<i>marketing</i> confidence=0.94 action=archive_unsubscribe previous_contact=never archive_group=false timings_ms={gmail:212,rule:3,sent:0,jev:1480,apply:160}
+<span class="d">09:10:05</span> unsubscribe list=promo.shop.example method=one_click status=<i>ok</i>
+<span class="d">09:10:07</span> message processed category=<i>action_required</i> confidence=0.93 action=keep needs_reply=0.85
+<span class="d">09:10:09</span> message processed category=<i>notification</i> confidence=0.55 action=archive archive_group=true
+<span class="d">09:10:10</span> message processed category=<i>important</i> decided_by=rule flags_only=true
+<span class="d">09:10:12</span> message processed category=<i>newsletter</i> confidence=0.50 action=keep low_confidence=true
+<span class="d">09:10:13</span> message processed category=<i>transactional</i> confidence=0.99 action=archive
+<span class="d">09:10:14</span> message processed category=<i>spam</i> confidence=0.95 action=spam reply_without_thread=true
+<span class="d">09:10:16</span> message processed category=<i>cold_outreach</i> confidence=0.96 action=archive_unsubscribe known_contact_kept=true
+<span class="d">09:10:17</span> message processed category=<i>notification</i> confidence=0.91 action=archive
+<span class="d">09:10:19</span> message processed category=<i>action_required</i> confidence=0.90 action=keep needs_reply=0.20
+<span class="d">09:10:20</span> run finished processed=14 archived=9 unsubscribed=1 review=1 errors=0
+<span class="d">09:10:20</span> next run in 10 min (launchd)</pre>

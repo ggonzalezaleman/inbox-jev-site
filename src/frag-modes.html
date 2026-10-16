@@ -1,0 +1,12 @@
+<pre class="term"><b>$ inbox-jev run --mode dry_run --limit 30</b>
+<span class="d">dry run: records decisions, touches nothing</span>
+processed=30 would_archive=19 would_unsubscribe=3 review=2
+
+<b>$ inbox-jev run --mode label</b>
+<span class="d">labels only: nothing leaves the inbox</span>
+
+<b>$ inbox-jev restore -a you@example.com --since 1d</b>
+restored 12 emails to the inbox
+  newsletter 7 · marketing 4 · notification 1
+labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
+<span class="d">restored emails are never processed again</span></pre>
