@@ -93,7 +93,9 @@ code { font-family: var(--mono); font-size: 0.92em; }
 .nav a, .nav button.nav-k { display: inline-flex; align-items: center; min-height: 26px; padding: 0 8px; background: var(--surface-2); color: var(--accent); border-radius: 2px; text-decoration: none; transition: background-color var(--t-hover) ease, color var(--t-hover) ease; }
 .nav a .k, .nav button.nav-k .k { opacity: 0.75; margin-right: 6px; }
 .nav .sp { flex: 1; }
-@media (hover: hover) and (pointer: fine) { .nav a:hover, .nav button.nav-k:hover { background: var(--accent); color: var(--accent-ink); } }
+.nav a.hot { background: var(--accent); color: var(--accent-ink); }
+.nav a.hot .k { opacity: 0.9; }
+@media (hover: hover) and (pointer: fine) { .nav a:hover, .nav button.nav-k:hover { background: var(--accent); color: var(--accent-ink); } .nav a.hot:hover { background: #b4f0e1; } }
 
 /* Hero */
 .hero { position: relative; padding-block: 48px 36px; }
@@ -472,8 +474,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <body>
 <nav class="wrap nav" aria-label="Page">
   <span class="mark" aria-hidden="true"></span>
+  <a class="hot" href="#try" data-key="t"><span class="k">[T]</span>Try it</a>
   <a href="#how" data-key="h"><span class="k">[H]</span>How it decides</a>
-  <a href="#try" data-key="t"><span class="k">[T]</span>Try it</a>
   <a href="#does" data-key="w"><span class="k">[W]</span>What it does</a>
   <a href="#categories" data-key="c"><span class="k">[C]</span>Categories</a>
   <a href="#questions" data-key="q"><span class="k">[Q]</span>Questions</a>
@@ -493,8 +495,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <h1 data-rise style="--i:0">inbox-jev</h1>
   <p class="sub" data-rise style="--i:1">Every ten minutes it labels your new mail with Jev, archives what has nothing for you to do and unsubscribes you from pitches it can verify.</p>
   <div class="actions" data-rise style="--i:2">
-    <a class="pill primary" href="#install">Install in two commands</a>
-    <a class="link" href="#how">How it decides</a>
+    <a class="pill primary" href="#try">Try it on an email</a>
+    <a class="pill" href="#install">Install in two commands</a>
   </div>
 
   <div class="pair" style="margin-top:64px">
@@ -570,16 +572,47 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   </div>
 </section>
 
+<!-- ============================ Playground ============================ -->
+<section class="block" id="try">
+  <div class="wrap">
+    <div class="label"><span>Playground</span><span>Fig. 3</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
+      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
+    </div>
+    <figure class="win try" data-ui style="margin:0">
+      <div class="win-bar"><span>&gt;_</span><span>[ FIG. 3 ]</span><span class="r">&#8801;</span></div>
+      <div class="win-body">
+        <form class="try-in" id="try-form" novalidate>
+          <div class="try-samples" role="group" aria-label="Sample emails">
+            <button type="button" class="pill" data-sample="pitch">A cold pitch</button>
+            <button type="button" class="pill" data-sample="receipt">A receipt</button>
+            <button type="button" class="pill" data-sample="phish">A fake reply</button>
+            <button type="button" class="pill" data-sample="newsletter">A newsletter</button>
+          </div>
+          <textarea id="try-raw" rows="14" spellcheck="false" autocomplete="off" aria-label="The email" placeholder="Paste an email here. Best with its headers: in Gmail, open the message, then ⋮ → Show original → Copy to clipboard. Plain text works too, without the sender checks."></textarea>
+          <div class="try-row">
+            <label class="try-check"><input type="checkbox" id="try-wrote"> I have written to this sender</label>
+            <button type="submit" class="pill primary" id="try-go">Ask Jev</button>
+          </div>
+          <p class="try-note" id="try-note">Checking the budget</p>
+        </form>
+        <div class="try-out" id="try-out" aria-live="polite"><p class="t-empty">Nothing decided yet. Take a sample or paste an email, then ask Jev.</p></div>
+      </div>
+    </figure>
+  </div>
+</section>
+
 <!-- ============================ How it decides ============================ -->
 <section class="block" id="how">
   <div class="wrap">
-    <div class="label"><span>How it decides</span><span>Fig. 3</span></div>
+    <div class="label"><span>How it decides</span><span>Fig. 4</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">How it decides<span class="count">(8)</span></h2>
       <p data-rise style="--i:1">Every email goes through the same steps. The eight in the figure are worked examples from the spec, and each one is also a test that runs the real code. Pick one and follow it to what Gmail shows afterwards.</p>
     </div>
     <figure class="flowfig" data-rise style="--i:2">
-      <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 3 ] THE PER-EMAIL PIPELINE</span><span class="r">&#8801;</span></div><div class="win-body">
+      <div class="win"><div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ] THE PER-EMAIL PIPELINE</span><span class="r">&#8801;</span></div><div class="win-body">
       <svg class="flow flow-desktop" viewBox="0 0 1200 490" role="img" aria-label="Eight real emails traced through inbox-jev: your rules decide first, the rest go to Jev, then policy turns Jev's confidence into an action.">
   <text x="0" y="22" class="cap">Eight emails from the spec · pick one</text>
   <text x="960" y="22" class="cap">Stays in the inbox</text>
@@ -780,37 +813,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>The confidence picks the action</h3><p>If it reaches the category's bar, that category's action runs. If several archive categories add up to 0.90, the email is archived under the strongest of them. Anything else stays in the inbox with Jev/Review.</p></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ============================ Playground ============================ -->
-<section class="block" id="try">
-  <div class="wrap">
-    <div class="label"><span>Playground</span><span>Fig. 4</span></div>
-    <div class="head">
-      <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
-      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
-    </div>
-    <figure class="win try" data-ui style="margin:0">
-      <div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ]</span><span class="r">&#8801;</span></div>
-      <div class="win-body">
-        <form class="try-in" id="try-form" novalidate>
-          <div class="try-samples" role="group" aria-label="Sample emails">
-            <button type="button" class="pill" data-sample="pitch">A cold pitch</button>
-            <button type="button" class="pill" data-sample="receipt">A receipt</button>
-            <button type="button" class="pill" data-sample="phish">A fake reply</button>
-            <button type="button" class="pill" data-sample="newsletter">A newsletter</button>
-          </div>
-          <textarea id="try-raw" rows="14" spellcheck="false" autocomplete="off" aria-label="The email" placeholder="Paste an email here. Best with its headers: in Gmail, open the message, then ⋮ → Show original → Copy to clipboard. Plain text works too, without the sender checks."></textarea>
-          <div class="try-row">
-            <label class="try-check"><input type="checkbox" id="try-wrote"> I have written to this sender</label>
-            <button type="submit" class="pill primary" id="try-go">Ask Jev</button>
-          </div>
-          <p class="try-note" id="try-note">Checking the budget</p>
-        </form>
-        <div class="try-out" id="try-out" aria-live="polite"><p class="t-empty">Nothing decided yet. Take a sample or paste an email, then ask Jev.</p></div>
-      </div>
-    </figure>
   </div>
 </section>
 
@@ -1040,7 +1042,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     <ul class="c1"><li>Project</li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev">GitHub</a></li><li><a href="https://pypi.org/project/inbox-jev/">PyPI</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/issues">Issues</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/LICENSE">MIT licence</a></li></ul>
     <ul class="c2"><li>Read</li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md">The plain-language guide</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/how-it-decides.md">How it decides</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/decisions/README.md">Decision records</a></li><li><a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Operations</a></li></ul>
     <ul class="c3"><li>Commands</li><li><code>inbox-jev run</code></li><li><code>inbox-jev digest</code></li><li><code>inbox-jev restore</code></li><li><code>inbox-jev rules set</code></li></ul>
-    <ul class="c4"><li>On this page</li><li><a href="#how">How it decides</a></li><li><a href="#categories">Categories</a></li><li><a href="#questions">Questions</a></li><li><a href="#install">Install</a></li></ul>
+    <ul class="c4"><li>On this page</li><li><a href="#try">Try it</a></li><li><a href="#how">How it decides</a></li><li><a href="#categories">Categories</a></li><li><a href="#questions">Questions</a></li><li><a href="#install">Install</a></li></ul>
     <div class="contact"><p>Built by <a href="https://guillermogonzalezaleman.com" style="color:var(--accent);text-decoration:none">Guille Gonzalez Aleman</a></p><p>Classifier: <a href="https://typesafe.ai" style="color:var(--accent);text-decoration:none">TypeSafe Jev</a></p></div>
   </div>
   <div class="foot-last"><p>© 2026 Litebox · MIT licence</p><div class="gh" aria-label="inbox-jev on GitHub"><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.6l2 4.1 4.5.6-3.3 3.2.8 4.5L8 11.9 4 14l.8-4.5-3.3-3.2 4.5-.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Star<b class="cnt" data-count="stargazers_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/fork"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="3.2" r="1.6"/><circle cx="12" cy="3.2" r="1.6"/><circle cx="8" cy="12.8" r="1.6"/><path d="M4 4.8v1.4c0 1 .8 1.8 1.8 1.8h4.4c1 0 1.8-.8 1.8-1.8V4.8M8 8v3.2"/></g></svg>Fork<b class="cnt" data-count="forks_count" hidden></b></a><a class="pill" href="https://github.com/hellolitebox/litebox-inbox-jev/issues"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/></svg>Issues<b class="cnt" data-count="open_issues_count" hidden></b></a></div></div>
@@ -1362,13 +1364,13 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     if (!isMac) document.querySelectorAll('.nav .k-desk').forEach(function (el) { el.textContent = '[Ctrl K]'; });
     var REPO = 'https://github.com/hellolitebox/litebox-inbox-jev';
     var ITEMS = [
-      { g: 'Sections', n: 'Top', s: 'inbox-jev', k: '', href: '#top', q: 'home start hero' },
-      { g: 'Sections', n: 'How it decides', s: 'The pipeline, eight worked examples', k: 'H', href: '#how' },
       { g: 'Sections', n: 'Try it', s: 'Paste an email, Jev decides it live', k: 'T', href: '#try', q: 'playground classify test' },
+      { g: 'Sections', n: 'How it decides', s: 'The pipeline, eight worked examples', k: 'H', href: '#how' },
       { g: 'Sections', n: 'What it does', s: 'Labels, archive, unsubscribe, corrections, digest, undo', k: 'W', href: '#does' },
       { g: 'Sections', n: 'Categories', s: 'The eight defaults and their bars', k: 'C', href: '#categories', q: 'labels yaml' },
       { g: 'Sections', n: 'Questions', s: 'Before you let it touch your mail', k: 'Q', href: '#questions', q: 'faq safety never' },
       { g: 'Sections', n: 'Install', s: 'Two commands', k: 'I', href: '#install', q: 'setup pip uv' },
+      { g: 'Sections', n: 'Top', s: 'inbox-jev', k: '', href: '#top', q: 'home start hero' },
       { g: 'Actions', n: 'Copy the install command', s: 'uv tool install inbox-jev && inbox-jev init', k: '', run: 'copy', q: 'clipboard' },
       { g: 'Actions', n: 'Try a cold pitch', s: 'Loads a sample into the playground', k: '', run: 'sample', q: 'playground demo' },
       { g: 'Actions', n: 'Star it on GitHub', s: 'Opens the repo', k: '', href: REPO, q: 'github' },
