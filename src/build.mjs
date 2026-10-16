@@ -3,7 +3,7 @@
 // inbox-jev repo, and wraps the page in its document head. No dependencies: `node src/build.mjs`.
 import { readFileSync, writeFileSync } from 'node:fs';
 
-export const SITE = 'https://inbox-jev-site.vercel.app';
+export const SITE = 'https://inboxjev.dev';
 const DESCRIPTION = "inbox-jev reads your Gmail every ten minutes, labels each email with the Jev classifier, archives receipts, notifications, newsletters and pitches, unsubscribes from the pitches it can verify, and learns from your corrections. Free, MIT licensed, runs on your own machine.";
 
 // Outcome rows (index → label, action, group)
