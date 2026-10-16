@@ -78,7 +78,7 @@ code { font-family: var(--mono); font-size: 0.92em; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .cross { position: absolute; font: 300 14px/1 var(--mono); color: var(--muted-2); pointer-events: none; }
 .rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
-.pair > *, .feat > *, .after > *, .steps > *, .cells > *, .ledger-grid > *, .side > *, .qa > div > *, .install-grid > *, .more > * { min-width: 0; }
+.pair > *, .feat > *, .after > *, .steps > *, .does > *, .ledger-grid > *, .side > *, .qa > div > *, .install-grid > *, .more > * { min-width: 0; }
 
 /* Window frames around every figure */
 .win { border: 2px solid var(--frame); background: var(--bg); overflow: hidden; display: flex; flex-direction: column; }
@@ -172,18 +172,6 @@ section.block { padding-block: 120px 0; }
 .steps p strong { color: var(--ink); font-weight: 500; }
 
 /* What it does: six cells on a hairline grid */
-.cells { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-.cell { position: relative; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); height: 520px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
-.cell.frag-top { grid-template-rows: 1fr auto; }
-.cell-text { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
-.cell-text h3 { font-size: var(--md); margin-top: 10px; }
-.cell-text p { color: var(--muted); max-width: 40ch; }
-.cell .frag { position: relative; overflow: hidden; min-height: 0; margin: 0 0 0 24px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 32px), transparent); }
-.cell .frag .win { position: absolute; left: 0; right: -2px; min-height: 100%; }
-.cell.text-top .frag .win { top: 0; border-bottom: 0; }
-.cell.frag-top .frag .win { top: 0; }
-.cell.frag-top .frag { margin-top: 24px; }
-.cell .gm .time { display: none; }
 
 /* Categories: a ledger */
 .ledger-grid { display: grid; grid-template-columns: 3fr 9fr; gap: 40px; }
@@ -262,6 +250,25 @@ footer .giant { font-size: var(--hero); letter-spacing: -0.07em; line-height: 0.
 .read .r-ref a { color: var(--accent); text-decoration: none; }
 .read .r-ref a:hover { text-decoration: underline; }
 footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
+
+/* What it does: six rows, one window. */
+.does { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: start; border-top: 1px solid var(--line); }
+.does-list { display: flex; flex-direction: column; }
+.does-row { position: relative; padding: 20px 20px 22px 24px; border-bottom: 1px solid var(--line); cursor: pointer; outline: none; }
+.does-row::before { content: ""; position: absolute; left: 0; top: 20px; bottom: 22px; width: 2px; background: transparent; }
+.does-row.is-on::before { background: var(--accent); }
+.does-row:focus-visible { box-shadow: inset 0 0 0 1px var(--accent); }
+.does-k { display: block; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted-2); }
+.does-k::before { content: "/ "; }
+.does-row h3 { font-size: var(--md); margin-top: 8px; }
+.does-row.is-on h3 { color: var(--accent); }
+.does-row p { color: var(--muted); margin: 8px 0 0; max-width: 44ch; }
+.does-win { position: sticky; top: 24px; margin-top: 24px; }
+.does-win .win-body { flex: none; height: 460px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); }
+.does-pane { position: absolute; inset: 0; overflow: hidden; }
+.does-pane > * { position: absolute; left: 0; right: 0; top: 0; }
+.js .does-pane:not(.is-on) { display: none; }
+.does-pane .gm .time { display: none; }
 
 /* The playground: an email in, the pass's decision out. */
 .try .win-body { display: grid; grid-template-columns: 5fr 7fr; }
@@ -383,8 +390,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .js .shutter.is-in .win-body > * { transform: none; }
   .ledger .body { animation: open 240ms var(--ease-out); }
   @keyframes open { from { opacity: 0; transform: translateY(-6px); } }
-  .cell .frag .win { transition: transform 600ms var(--ease-soft); }
-  .cell:hover .frag .win { transform: translateY(-4px); }
   .feat .win-body > * { transition: transform 900ms var(--ease-soft); }
   .js footer .giant { transition: color 700ms var(--ease-soft), transform 700ms var(--ease-soft); }
   .read .chip { animation: pop 240ms var(--ease-out); }
@@ -399,6 +404,9 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 
 /* Tablet and phone: a second composition */
 @media (max-width: 1100px) {
+  .does { grid-template-columns: 1fr; gap: 0; }
+  .does-win { position: static; margin: 16px 0 24px; }
+  .does-win .win-body { height: 300px; }
   .try .win-body { grid-template-columns: 1fr; }
   .try-in { border-right: 0; border-bottom: 1px solid var(--line); }
   .flow-desktop { display: none; }
@@ -406,7 +414,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .verdict { grid-template-columns: 1fr; gap: 6px; }
   .flowfig .win-body { padding: 16px; }
   .steps > div { padding: 24px 24px 24px 0; }
-  .cells { grid-template-columns: repeat(2, 1fr); }
   .ledger-grid { grid-template-columns: 1fr; gap: 32px; }
   .side { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
   .side > div + div { margin-top: 0; }
@@ -415,6 +422,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .pair > div + div { border-left: 0; padding-left: 0; margin-left: 0; }
 }
 @media (max-width: 760px) {
+  .does-win .win-body { height: 240px; }
+  .does-row { padding: 16px 12px 18px 16px; }
   .nav .k-desk { display: none; } .nav .k-phone { display: inline; }
   .palette { padding-top: 8vh; }
   .nav { gap: 6px; }
@@ -442,14 +451,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .verdict { padding: 12px 14px 14px; gap: 4px; }
   .verdict .v-subj, .verdict .v-ref { display: none; }
   .verdict .v-body { font-size: 13.5px; line-height: 1.35; }
-  .cells { grid-template-columns: 1fr; }
-  .cell, .cell.frag-top { height: auto; display: flex; flex-direction: column; }
-  .cell.frag-top { flex-direction: column-reverse; justify-content: flex-end; }
-  .cell-text { padding: 16px 20px 20px; }
-  .cell .frag { height: 240px; margin: 0 0 0 20px; flex: none; }
-  .cell:nth-child(even) .frag { margin: 0 20px 0 0; }
-  .cell.frag-top .frag { margin-top: 16px; }
-  .cell .frag .win { top: 0; bottom: auto; border-bottom: 2px solid var(--frame); }
   .side { grid-template-columns: 1fr; }
   .ledger summary { grid-template-columns: 1fr 24px; grid-template-areas: "name plus" "tag plus" "conf plus"; row-gap: 6px; padding: 14px 0; }
   .ledger summary .tag { grid-area: tag; justify-self: start; }
@@ -819,14 +820,23 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ What it does ============================ -->
 <section class="block" id="does">
   <div class="wrap">
-    <div class="label"><span>What it does</span><span>Fig. 5 to 10</span></div>
+    <div class="label"><span>What it does</span><span>Fig. 5</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">What it does to your inbox<span class="count">(6)</span></h2>
     </div>
-    <div class="cells">
-      <article class="cell text-top" data-rise style="--i:0">
-        <div class="cell-text"><div class="label"><span>Labels</span></div><h3>One Gmail label per category</h3><p>The eight categories each get a label under the Jev/ prefix. Three more can appear next to them: Jev/Needs Reply, Jev/Invoices, and Jev/Review for the emails Jev isn't sure about. You can rename them or add a category in categories.yaml without touching code.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 ]</span><span class="r">&#8801;</span></div><div class="win-body"><div class="labels">
+    <div class="does">
+      <div class="does-list" role="tablist" aria-label="What it does">
+        <div class="does-row is-on" role="tab" tabindex="0" aria-selected="true" aria-controls="does-labels" id="tab-labels" data-rise style="--i:0"><span class="does-k">Labels</span><h3>One Gmail label per category</h3><p>Eight labels under the Jev/ prefix, plus Jev/Needs Reply, Jev/Invoices and Jev/Review. Rename them or add a category in categories.yaml.</p></div>
+        <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-archive" id="tab-archive" data-rise style="--i:1"><span class="does-k">Archive</span><h3>Archives what has nothing for you to do</h3><p>Receipts, notifications, newsletters, promotions and pitches leave the inbox once Jev is at least 0.80 sure. Below the bar they stay, with Jev/Review.</p></div>
+        <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-gate" id="tab-gate" data-rise style="--i:2"><span class="does-k">Unsubscribe</span><h3>Unsubscribes only from senders it can verify</h3><p>Marketing and cold outreach at 0.90 or more, from a sender that passes DMARC and offers a List-Unsubscribe header, never a group or anyone you wrote to.</p></div>
+        <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-learns" id="tab-learns" data-rise style="--i:3"><span class="does-k">Corrections</span><h3>Learns from your corrections</h3><p>Swap a label or move an email back and the next pass writes a rule for that sender. Three answers at 0.95 or more make one on their own.</p></div>
+        <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-digest" id="tab-digest" data-rise style="--i:4"><span class="does-k">Digest</span><h3>One Slack message every morning</h3><p>At 08:00: what needs you, what it archived, which lists it unsubscribed you from and what it learned. Short enough for a phone.</p></div>
+        <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-modes" id="tab-modes" data-rise style="--i:5"><span class="does-k">Undo</span><h3>Everything it does can be undone</h3><p>Every decision is in SQLite. Watch it in dry_run, then label, before act moves anything. One command brings a day's mail back.</p></div>
+      </div>
+      <figure class="win does-win" data-ui style="margin:0" data-rise>
+        <div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 · LABELS ]</span><span class="r">&#8801;</span></div>
+        <div class="win-body">
+          <div class="does-pane is-on" id="does-labels" role="tabpanel" aria-labelledby="tab-labels"><div class="labels">
           <div class="l sel"><span>Jev/Action</span><span class="n">5</span></div>
           <div class="l"><span>Jev/Important</span><span class="n">4</span></div>
           <div class="l"><span>Jev/Needs Reply</span><span class="n">3</span></div>
@@ -835,10 +845,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
           <div class="l"><span>Jev/Transactional</span><span class="n"></span></div>
           <div class="l"><span>Jev/Notifications</span><span class="n"></span></div>
           <div class="l"><span>Jev/Newsletters</span><span class="n"></span></div>
-        </div></div></div></div>
-      </article>
-      <article class="cell frag-top" data-rise style="--i:1">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><span class="d">09:10:05</span> message processed category=<i>transactional</i> confidence=0.97 action=archive
+        </div></div>
+          <div class="does-pane" id="does-archive" role="tabpanel" aria-labelledby="tab-archive"><pre class="term"><span class="d">09:10:05</span> message processed category=<i>transactional</i> confidence=0.97 action=archive
 <span class="d">09:10:07</span> message processed category=<i>notification</i> confidence=0.55 action=archive archive_group=true
 <span class="d">09:10:08</span> message processed category=<i>newsletter</i> confidence=0.88 action=archive
 <span class="d">09:10:09</span> message processed category=<i>marketing</i> confidence=0.94 action=archive_unsubscribe
@@ -848,12 +856,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <span class="d">09:10:15</span> message processed category=<i>notification</i> confidence=0.91 action=archive
 <span class="d">09:10:17</span> message processed category=<i>marketing</i> confidence=0.73 action=archive archive_group=true
 <span class="d">09:10:18</span> message processed category=<i>newsletter</i> confidence=0.96 action=archive
-<span class="d">09:10:19</span> run finished processed=14 archived=9 unsubscribed=1 review=1 errors=0</pre></div></div></div>
-        <div class="cell-text"><div class="label"><span>Archive</span></div><h3>Archives what has nothing for you to do</h3><p>Receipts, notifications, newsletters, promotions and pitches are archived once Jev is at least 0.80 sure, or 0.90 for the two categories it also unsubscribes from. Below the bar the email stays in the inbox with Jev/Review and the label Jev would have used.</p></div>
-      </article>
-      <article class="cell text-top" data-rise style="--i:2">
-        <div class="cell-text"><div class="label"><span>Unsubscribe</span></div><h3>Unsubscribes only from senders it can verify</h3><p>It unsubscribes only from marketing and cold outreach, when Jev is at least 0.90 sure, the sender passes DMARC and sends a List-Unsubscribe header, the sender is not a group or anyone you have written to, and the account is in act mode. If the sender offers RFC 8058 one-click it uses that, otherwise the mailto: address, otherwise it leaves the link in your digest.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body"><div class="gate">
+<span class="d">09:10:19</span> run finished processed=14 archived=9 unsubscribed=1 review=1 errors=0</pre></div>
+          <div class="does-pane" id="does-gate" role="tabpanel" aria-labelledby="tab-gate"><div class="gate">
           <div class="q">cold_outreach at 0.96, bar is 0.90</div>
           <div class="q">dmarc=pass in Gmail's Authentication-Results</div>
           <div class="q">List-Unsubscribe + List-Unsubscribe-Post present</div>
@@ -861,29 +865,21 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
           <div class="q">you never wrote to sam@growthagency.example</div>
           <div class="q">mode act, 3 of 10 unsubscribes left this run</div>
           <div class="then">POST https://unsub.sequencer.example/u/abc <i>List-Unsubscribe=One-Click</i> → 200</div>
-        </div></div></div></div>
-      </article>
-      <article class="cell frag-top" data-rise style="--i:3">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ]</span><span class="r">&#8801;</span></div><div class="win-body"><div class="gm">
+        </div></div>
+          <div class="does-pane" id="does-learns" role="tabpanel" aria-labelledby="tab-learns"><div class="gm">
           <div class="row"><span class="cb"></span><span class="from">Weekly Product</span><span class="chip c-nl" style="text-decoration: line-through; opacity:.6">Jev/Newsletters</span><span class="chip c-imp">Jev/Important</span><span class="subj">This week in product <span>— Label changed by you</span></span><span class="time">Oct 8</span></div>
           <div class="row sel"><span class="cb"></span><span class="from u">Weekly Product</span><span class="chip c-imp">Jev/Important</span><span class="subj u">This week in product <span>— Decided by your rule, a week later</span></span><span class="time">Oct 15</span></div>
           <div class="row"><span class="cb"></span><span class="from">Brand Studio</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Announcing our spring collection <span>— Jev/Review removed by you: suggestion accepted</span></span><span class="time">Oct 9</span></div>
           <div class="row"><span class="cb"></span><span class="from">Brand Studio</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Autumn lookbook <span>— Archived by your rule</span></span><span class="time">Oct 14</span></div>
           <div class="row"><span class="cb"></span><span class="from u">Sam Lee</span><span class="chip c-out">Jev/Outreach</span><span class="subj u">Re: quick question <span>— Rule from three Jev answers at 0.96</span></span><span class="time">Oct 12</span></div>
-        </div></div></div></div>
-        <div class="cell-text"><div class="label"><span>Corrections</span></div><h3>Learns from your corrections</h3><p>When you swap a label, remove Jev/Review or move an archived email back to the inbox, the next pass records the correction and writes a rule for that sender. Jev's own answers make a rule too, after three of the same category at 0.95 or more. Starred mail is left alone.</p></div>
-      </article>
-      <article class="cell text-top" data-rise style="--i:4">
-        <div class="cell-text"><div class="label"><span>Digest</span></div><h3>One Slack message every morning</h3><p>At 08:00 it sends a Slack message, in English or Spanish, with the emails that need you, what it archived, which lists it unsubscribed you from and what it learned from your corrections. It is short enough to read on a phone.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 9 ]</span><span class="r">&#8801;</span></div><div class="win-body"><div class="slack"><div class="who"><span class="av">jev</span><span><b>inbox-jev</b><span class="app">APP</span><span class="ts">8:00 AM</span></span></div>
+        </div></div>
+          <div class="does-pane" id="does-digest" role="tabpanel" aria-labelledby="tab-digest"><div class="slack"><div class="who"><span class="av">jev</span><span><b>inbox-jev</b><span class="app">APP</span><span class="ts">8:00 AM</span></span></div>
         <p><b>3 emails need you</b></p><p class="ctx">you@example.com · last 24h · mode: act</p>
         <h4>Needs reply (2)</h4>
         <ul><li><a href="#top">Signed contract by Friday?</a> · Ana Diaz · 3h ago</li><li><a href="#top">Can we move Thursday?</a> · Marta Ruiz · 19h ago</li></ul>
         <h4>What Jev did · last 24h</h4>
-        <table><tr><td>Jev/Notifications</td><td>31</td></tr><tr><td>Jev/Marketing</td><td>9</td></tr><tr><td>Jev/Newsletters</td><td>7</td></tr><tr><td>Jev/Transactional</td><td>6</td></tr><tr><td>To review</td><td>1</td></tr><tr><td><b>Processed</b></td><td><b>64</b></td></tr></table></div></div></div></div>
-      </article>
-      <article class="cell frag-top" data-rise style="--i:5">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 10 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><b>$ inbox-jev run --mode dry_run --limit 30</b>
+        <table><tr><td>Jev/Notifications</td><td>31</td></tr><tr><td>Jev/Marketing</td><td>9</td></tr><tr><td>Jev/Newsletters</td><td>7</td></tr><tr><td>Jev/Transactional</td><td>6</td></tr><tr><td>To review</td><td>1</td></tr><tr><td><b>Processed</b></td><td><b>64</b></td></tr></table></div></div>
+          <div class="does-pane" id="does-modes" role="tabpanel" aria-labelledby="tab-modes"><pre class="term"><b>$ inbox-jev run --mode dry_run --limit 30</b>
 <span class="d">dry run: records decisions, touches nothing</span>
 processed=30 would_archive=19 would_unsubscribe=3 review=2
 
@@ -894,9 +890,9 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2
 restored 12 emails to the inbox
   newsletter 7 · marketing 4 · notification 1
 labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
-<span class="d">restored emails are never processed again</span></pre></div></div></div>
-        <div class="cell-text"><div class="label"><span>Undo</span></div><h3>Everything it does can be undone</h3><p>Each decision is stored in SQLite with its confidence and the probabilities Jev gave. You can run it in dry_run for a week and read what it would have done, then in label, which only adds labels, before you let act move anything. One command moves a day's archived mail back to the inbox.</p></div>
-      </article>
+<span class="d">restored emails are never processed again</span></pre></div>
+        </div>
+      </figure>
     </div>
   </div>
 </section>
@@ -904,7 +900,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
 <!-- ============================ Categories ============================ -->
 <section class="block" id="categories">
   <div class="wrap">
-    <div class="label"><span>Categories</span><span>Fig. 11 and 12</span></div>
+    <div class="label"><span>Categories</span><span>Fig. 6 and 7</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Categories<span class="count">(8)</span></h2>
       <p data-rise style="--i:1">These are the defaults the package ships with, and they are one person's preferences. You can change the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
@@ -913,7 +909,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
       <aside class="side" data-rise style="--i:0">
         <div>
           <div class="label"><span>categories.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 11 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
 <span class="k">categories:</span>
   - <span class="k">key:</span> marketing
     <span class="k">label:</span> Jev/Marketing
@@ -926,7 +922,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
         </div>
         <div>
           <div class="label"><span>accounts.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 12 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
 <span class="k">accounts:</span>
   - <span class="k">email:</span> you@example.com
     <span class="k">mode:</span> act
@@ -997,7 +993,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
 <!-- ============================ Install ============================ -->
 <section class="block" id="install">
   <div class="wrap">
-    <div class="label"><span>Install</span><span>Fig. 13</span></div>
+    <div class="label"><span>Install</span><span>Fig. 8</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Install it in two commands</h2>
       <p data-rise style="--i:1">It is free, MIT licensed, and runs on your own machine. You need a TypeSafe API key and a Google OAuth client of your own, and the setup wizard walks you through both. Slack is optional. Your email goes to Google and to TypeSafe, and to no other server.</p>
@@ -1011,7 +1007,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
         <div class="copy"><code id="install-cmd"><span class="nw">uv tool install inbox-jev</span> &amp;&amp; <span class="nw">inbox-jev init</span></code><button type="button" class="pill" id="copy-btn">Copy</button></div>
         <p class="small">If you run it from a checkout of the repo, it uses the checkout. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
       </div>
-      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 13 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><b>$ inbox-jev init</b>
+      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="term"><b>$ inbox-jev init</b>
 [1/5] TypeSafe API key      checked, saved to .env
 [2/5] Google OAuth client   found in ~/Downloads, copied
 [3/5] Slack bot token       skipped
@@ -1243,6 +1239,40 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     new IntersectionObserver(function (es) { visible = es[0].isIntersecting; resume(); }, { threshold: 0.2 }).observe(log.parentNode);
     document.addEventListener('visibilitychange', resume);
     window.addEventListener('resize', fit);
+  }
+
+  // What it does: six rows, one window; the row you pick fills it.
+  var doesRows = document.querySelectorAll('.does-row');
+  if (doesRows.length) {
+    var doesBar = document.querySelector('.does-win .win-bar span:nth-child(2)'), doesFig = document.querySelector('.does-win'), doesHost = doesFig && doesFig.parentNode;
+    var doesNarrow = window.matchMedia('(max-width: 1100px)');
+    // Narrow screens: the window sits right under the row you picked, so it is always in view.
+    var doesPlace = function () {
+      var on = document.querySelector('.does-row.is-on'); if (!doesFig || !on) return;
+      if (doesNarrow.matches) on.insertAdjacentElement('afterend', doesFig); else if (doesFig.parentNode !== doesHost) doesHost.appendChild(doesFig);
+    };
+    var doesPick = function (row, focusIt) {
+      doesRows.forEach(function (r) {
+        var on = r === row;
+        r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
+        var pane = document.getElementById(r.getAttribute('aria-controls')); if (pane) pane.classList.toggle('is-on', on);
+      });
+      if (doesBar) doesBar.textContent = '[ FIG. 5 · ' + row.querySelector('.does-k').textContent.toUpperCase() + ' ]';
+      doesPlace();
+      if (focusIt) row.focus();
+    };
+    doesPlace();
+    if (doesNarrow.addEventListener) doesNarrow.addEventListener('change', doesPlace);
+    doesRows.forEach(function (r, i) {
+      r.addEventListener('click', function () { doesPick(r); });
+      r.addEventListener('keydown', function (e) {
+        var n = null;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') n = doesRows[(i + 1) % doesRows.length];
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') n = doesRows[(i - 1 + doesRows.length) % doesRows.length];
+        else if (e.key === 'Enter' || e.key === ' ') n = r;
+        if (n) { e.preventDefault(); doesPick(n, true); }
+      });
+    });
   }
 
   // The playground: one email in, the pass's decision out, with Jev's real answer.
