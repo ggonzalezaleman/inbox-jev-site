@@ -238,7 +238,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 /* What it does: six rows, one window. */
 .does { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: start; border-top: 1px solid var(--line); }
 .does-list { display: flex; flex-direction: column; }
-.does-row { position: relative; padding: 20px 20px 22px 24px; border-bottom: 1px solid var(--line); cursor: pointer; outline: none; }
+.does-row { position: relative; min-height: 34vh; display: flex; flex-direction: column; justify-content: center; padding: 20px 20px 22px 24px; border-bottom: 1px solid var(--line); cursor: pointer; outline: none; }
 .does-row::before { content: ""; position: absolute; left: 0; top: 20px; bottom: 22px; width: 2px; background: transparent; }
 .does-row.is-on::before { background: var(--accent); }
 .does-row:focus-visible { box-shadow: inset 0 0 0 1px var(--accent); }
@@ -379,6 +379,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .read .chip { animation: pop 240ms var(--ease-out); }
   @keyframes pop { from { opacity: 0; transform: scale(0.7); } }
   [data-ui] pre.term .ln { animation: ln 180ms var(--ease-out); }
+  .does-pane.is-on > * { animation: ln 220ms var(--ease-out); }
   @keyframes ln { from { opacity: 0; transform: translateY(3px); } }
   [data-ui] .cur { animation: blink 1s steps(2, start) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
@@ -389,6 +390,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 /* Tablet and phone: a second composition */
 @media (max-width: 1100px) {
   .does { grid-template-columns: 1fr; gap: 0; }
+  .does-row { min-height: 0; display: block; }
   .does-win { position: static; margin: 16px 0 24px; }
   .does-win .win-body { height: 300px; }
   .try .win-body { grid-template-columns: 1fr; }
@@ -959,8 +961,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       var on = document.querySelector('.does-row.is-on'); if (!doesFig || !on) return;
       if (doesNarrow.matches) on.insertAdjacentElement('afterend', doesFig); else if (doesFig.parentNode !== doesHost) doesHost.appendChild(doesFig);
     };
-    var doesPick = function (row, focusIt) {
-      if (!row.classList.contains('is-on')) track('does_pick', { row: row.querySelector('.does-k').textContent.toLowerCase() });
+    var doesPick = function (row, focusIt, byScroll) {
+      if (!byScroll && !row.classList.contains('is-on')) track('does_pick', { row: row.querySelector('.does-k').textContent.toLowerCase() });
       doesRows.forEach(function (r) {
         var on = r === row;
         r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
@@ -972,14 +974,37 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     };
     doesPlace();
     if (doesNarrow.addEventListener) doesNarrow.addEventListener('change', doesPlace);
+    // On a wide screen the window stays put and the scroll picks the row level with it.
+    var doesList = document.querySelector('.does-list'), doesLockUntil = 0, doesTicking = false;
+    var doesRef = function () { var r = doesFig.getBoundingClientRect(); return r.top + r.height / 2; };
+    var doesAlign = function (row) {
+      if (doesNarrow.matches) return;
+      doesLockUntil = Date.now() + 900;
+      var b = row.getBoundingClientRect();
+      window.scrollBy({ top: (b.top + b.bottom) / 2 - doesRef(), behavior: reduce ? 'auto' : 'smooth' });
+    };
+    var doesOnScroll = function () {
+      if (doesNarrow.matches || doesTicking) return;
+      doesTicking = true;
+      requestAnimationFrame(function () {
+        doesTicking = false;
+        if (Date.now() < doesLockUntil) return;
+        var list = doesList.getBoundingClientRect();
+        if (list.bottom < 0 || list.top > window.innerHeight) return;
+        var ref = doesRef(), best = null, bestD = Infinity;
+        doesRows.forEach(function (r) { var b = r.getBoundingClientRect(), d = Math.abs((b.top + b.bottom) / 2 - ref); if (d < bestD) { bestD = d; best = r; } });
+        if (best && !best.classList.contains('is-on')) doesPick(best, false, true);
+      });
+    };
+    window.addEventListener('scroll', doesOnScroll, { passive: true });
     doesRows.forEach(function (r, i) {
-      r.addEventListener('click', function () { doesPick(r); });
+      r.addEventListener('click', function () { doesPick(r); doesAlign(r); });
       r.addEventListener('keydown', function (e) {
         var n = null;
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') n = doesRows[(i + 1) % doesRows.length];
         else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') n = doesRows[(i - 1 + doesRows.length) % doesRows.length];
         else if (e.key === 'Enter' || e.key === ' ') n = r;
-        if (n) { e.preventDefault(); doesPick(n, true); }
+        if (n) { e.preventDefault(); doesPick(n, true); doesAlign(n); }
       });
     });
   }
