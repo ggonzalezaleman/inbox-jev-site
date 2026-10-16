@@ -9,6 +9,8 @@ your Gmail with the Jev classifier. One static page, no framework, deployed on V
 - `src/template.src.html`: the page source: styles, copy and script, with `{{frag:name}}` placeholders.
 - `src/frag-*.html`: the interface mockups (Gmail rows, terminals, the Slack digest, YAML files). They
   carry example data, not real mail.
+- `src/frag-run.html` is also the fallback of the "pass itself" figure: with script and motion allowed, the
+  page's script replaces it with a run log that streams synthetic records, run after run, while on screen.
 - `src/build.mjs`: resolves the fragments, generates the two "How it decides" diagrams (desktop and
   phone) from the worked examples of the spec, and writes `index.html` with its document head.
 - `og.png`: the social card, a render of the first screen. `favicon.svg`: the mark.

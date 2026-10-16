@@ -254,6 +254,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 [data-ui] pre.term b, [data-ui] pre.tbl b { color: var(--ink-strong); font-weight: 500; }
 [data-ui] pre.term i { color: var(--accent); font-style: normal; }
 [data-ui] pre.term .d { color: var(--muted-2); }
+[data-ui] pre.term .ln { display: block; }
+[data-ui] pre.term .cur { display: inline-block; width: 7px; height: 13px; background: var(--accent); vertical-align: -2px; margin-left: 2px; }
 [data-ui] pre.yaml .k { color: var(--accent); }
 [data-ui] pre.yaml .c { color: var(--muted-2); }
 [data-ui] pre.tbl { font-variant-numeric: tabular-nums; }
@@ -313,6 +315,10 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .js footer .giant { transition: color 700ms var(--ease-soft), transform 700ms var(--ease-soft); }
   .read .chip { animation: pop 240ms var(--ease-out); }
   @keyframes pop { from { opacity: 0; transform: scale(0.7); } }
+  [data-ui] pre.term .ln { animation: ln 180ms var(--ease-out); }
+  @keyframes ln { from { opacity: 0; transform: translateY(3px); } }
+  [data-ui] pre.term .cur { animation: blink 1s steps(2, start) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
   .drift { will-change: transform; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -762,6 +768,79 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) { if (!d) return; var c = { stargazers_count: d.stargazers_count, forks_count: d.forks_count, open_issues_count: d.open_issues_count }; fill(c); try { sessionStorage.setItem(ghKey, JSON.stringify({ t: Date.now(), d: c })); } catch (err) {} })
       .catch(function () {});
+  }
+
+  // The pass itself: the run log streams record by record, run after run, while the figure is on screen.
+  var log = document.getElementById('run-log');
+  if (log && !reduce && 'IntersectionObserver' in window) {
+    var R = function (lo, hi) { return lo + Math.random() * (hi - lo); };
+    var conf = function (lo, hi) { return (Math.round(R(lo, hi) * 100) / 100).toFixed(2); };
+    var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+    // What a record can say, in the words of the real log, and what it adds to the run's summary.
+    var KINDS = [
+      function () { return { h: 'category=<i>marketing</i> confidence=' + conf(0.9, 0.97) + ' action=archive_unsubscribe previous_contact=never archive_group=false timings_ms={gmail:' + Math.round(R(150, 320)) + ',rule:' + Math.round(R(2, 6)) + ',sent:0,jev:' + Math.round(R(900, 1900)) + ',apply:' + Math.round(R(90, 230)) + '}', archived: 1, unsub: 'list=' + pick(['promo.shop.example', 'news.brand.example', 'deals.store.example', 'hello.saas.example']) + ' method=one_click status=<i>ok</i>' }; },
+      function () { return { h: 'category=<i>action_required</i> confidence=' + conf(0.9, 0.96) + ' action=keep needs_reply=' + conf(0.6, 0.92) }; },
+      function () { return { h: 'category=<i>notification</i> confidence=' + conf(0.5, 0.62) + ' action=archive archive_group=true', archived: 1 }; },
+      function () { return { h: 'category=<i>important</i> decided_by=rule flags_only=true' }; },
+      function () { return { h: 'category=<i>newsletter</i> confidence=' + conf(0.45, 0.55) + ' action=keep low_confidence=true', review: 1 }; },
+      function () { return { h: 'category=<i>transactional</i> confidence=' + conf(0.97, 0.99) + ' action=archive', archived: 1 }; },
+      function () { return { h: 'category=<i>spam</i> confidence=' + conf(0.92, 0.97) + ' action=spam reply_without_thread=true' }; },
+      function () { return { h: 'category=<i>cold_outreach</i> confidence=' + conf(0.92, 0.97) + ' action=archive_unsubscribe known_contact_kept=true', archived: 1 }; },
+      function () { return { h: 'category=<i>notification</i> confidence=' + conf(0.88, 0.95) + ' action=archive', archived: 1 }; },
+      function () { return { h: 'category=<i>action_required</i> confidence=' + conf(0.88, 0.93) + ' action=keep needs_reply=' + conf(0.1, 0.3) }; }
+    ];
+    var bag = [], draw = function () {
+      if (!bag.length) { bag = KINDS.slice(); for (var i = bag.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), x = bag[i]; bag[i] = bag[j]; bag[j] = x; } }
+      return bag.pop()();
+    };
+    var t = 9 * 3600 + 10 * 60 + 3, cap = 12, visible = false, started = false, pending = null;
+    var hms = function (s) { s = ((s % 86400) + 86400) % 86400; var p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(Math.floor(s / 3600)) + ':' + p(Math.floor(s / 60) % 60) + ':' + p(s % 60); };
+    var cursor = document.createElement('span'); cursor.className = 'cur';
+    var fit = function () {
+      var cs = getComputedStyle(log), lh = parseFloat(cs.lineHeight) || 20, pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      cap = Math.max(4, Math.floor((log.parentNode.clientHeight - pad) / lh));
+      while (log.childElementCount > cap) log.removeChild(log.firstElementChild);
+    };
+    var line = function (html) {
+      var el = document.createElement('span'); el.className = 'ln'; el.innerHTML = html; el.appendChild(cursor);
+      log.appendChild(el);
+      while (log.childElementCount > cap) log.removeChild(log.firstElementChild);
+      return el;
+    };
+    var stamp = function (html) { return line('<span class="d">' + hms(t) + '</span> ' + html); };
+    // A step waits, then runs only while the figure is on a visible screen; otherwise it holds until it is.
+    var wait = function (ms, fn) { setTimeout(function () { if (visible && !document.hidden) fn(); else pending = fn; }, ms); };
+    var type = function (text, done) {
+      var b = line('<b></b>').firstChild, i = 0;
+      var step = function () { b.textContent = text.slice(0, ++i); if (i < text.length) wait(22 + Math.random() * 40, step); else wait(400, done); };
+      step();
+    };
+    var run = function () {
+      var start = t, n = 8 + Math.floor(Math.random() * 5), sum = { archived: 0, unsubscribed: 0, review: 0 }, i = 0;
+      stamp('run started account=you@example.com mode=act lookback=2d');
+      var next = function () {
+        if (i++ >= n) {
+          t += 1; stamp('run finished processed=' + n + ' archived=' + sum.archived + ' unsubscribed=' + sum.unsubscribed + ' review=' + sum.review + ' errors=0');
+          wait(260, function () { stamp('next run in 10 min (launchd)'); wait(2800, function () { t = start + 600; run(); }); });
+          return;
+        }
+        var r = draw();
+        t += 1 + Math.floor(Math.random() * 3);
+        stamp('message processed ' + r.h);
+        sum.archived += r.archived || 0; sum.review += r.review || 0;
+        if (r.unsub) wait(180, function () { stamp('unsubscribe ' + r.unsub); sum.unsubscribed++; wait(R(320, 780), next); });
+        else wait(R(320, 780), next);
+      };
+      wait(500, next);
+    };
+    var resume = function () {
+      if (!visible || document.hidden) return;
+      if (!started) { started = true; wait(700, function () { log.textContent = ''; fit(); type('$ inbox-jev run -a you@example.com --mode act', run); }); }
+      else if (pending) { var f = pending; pending = null; f(); }
+    };
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; resume(); }, { threshold: 0.2 }).observe(log.parentNode);
+    document.addEventListener('visibilitychange', resume);
+    window.addEventListener('resize', fit);
   }
 
   // The footer reads this page the way Jev would: the score climbs with the scroll and the verdict lands at the bar.
