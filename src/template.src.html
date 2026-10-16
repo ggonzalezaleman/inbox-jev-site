@@ -538,7 +538,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div class="label"><span>Playground</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
-      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
+      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored.</p>
     </div>
     <figure class="win try" data-ui style="margin:0">
       <div class="win-bar"><span>&gt;_</span><span>[ PLAYGROUND ]</span><span class="r">&#8801;</span></div>
@@ -555,7 +555,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
             <label class="try-check"><input type="checkbox" id="try-wrote"> I have written to this sender</label>
             <button type="submit" class="pill primary" id="try-go">Ask Jev</button>
           </div>
-          <p class="try-note" id="try-note">Checking the budget</p>
+          <p class="try-note" id="try-note" hidden></p>
         </form>
         <div class="try-out" id="try-out" aria-live="polite"><p class="t-empty">Nothing decided yet. Take a sample or paste an email, then ask Jev.</p></div>
       </div>
@@ -757,6 +757,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 (function () {
   var root = document.documentElement;
   root.classList.add('js');
+  // Analytics: one event per thing a visitor does, never what they typed.
+  var track = function (name, params) { try { if (window.gtag) gtag('event', name, params || {}); } catch (err) {} };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // The eight emails, what the spec says happens to each.
@@ -798,13 +800,18 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     document.getElementById('v-ref').textContent = ex.ref;
   }
   flows.forEach(function (svg) {
-    svg.addEventListener('click', function (e) { var m = e.target.closest('.mail'); if (m) select(m.getAttribute('data-ex'), true); });
+    svg.addEventListener('click', function (e) { var m = e.target.closest('.mail'); if (m) { select(m.getAttribute('data-ex'), true); track('example_pick', { example: m.getAttribute('data-ex') }); } });
     svg.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       var m = e.target.closest('.mail'); if (m) { e.preventDefault(); select(m.getAttribute('data-ex'), true); }
     });
   });
   select('ex04', false);
+
+  // Clicks worth counting: the hero's two actions, the nav, the GitHub pills.
+  document.querySelectorAll('.hero .actions a').forEach(function (a) { a.addEventListener('click', function () { track('cta_click', { target: a.getAttribute('href') }); }); });
+  document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { track('nav_click', { target: a.getAttribute('href') }); }); });
+  document.querySelectorAll('.gh .pill').forEach(function (a) { a.addEventListener('click', function () { track('github_click', { kind: a.textContent.trim().split(/\s/)[0].toLowerCase() }); }); });
 
   // Hotkeys, as the nav promises: a letter jumps to its section.
   var keys = {};
@@ -813,6 +820,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     var t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     var a = keys[e.key.toLowerCase()]; if (!a) return;
+    track('hotkey', { key: e.key.toLowerCase() });
     var href = a.getAttribute('href');
     if (href.charAt(0) === '#') { var s = document.querySelector(href); if (s) { e.preventDefault(); s.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); } }
     else { window.open(href, '_blank', 'noopener'); }
@@ -848,7 +856,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   // Copy the install command.
   var cmd = document.getElementById('install-cmd'), btn = document.getElementById('copy-btn');
   if (btn) btn.addEventListener('click', function () {
-    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); track('copy_install'); };
     var fallback = function () {
       try { var r = document.createRange(); r.selectNodeContents(cmd); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (err) {}
       btn.textContent = 'Selected, press copy'; setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
@@ -952,6 +960,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       if (doesNarrow.matches) on.insertAdjacentElement('afterend', doesFig); else if (doesFig.parentNode !== doesHost) doesHost.appendChild(doesFig);
     };
     var doesPick = function (row, focusIt) {
+      if (!row.classList.contains('is-on')) track('does_pick', { row: row.querySelector('.does-k').textContent.toLowerCase() });
       doesRows.forEach(function (r) {
         var on = r === row;
         r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
@@ -980,21 +989,16 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   if (tryForm && window.fetch) {
     var SAMPLES = {{samples}};
     var rawEl = document.getElementById('try-raw'), wroteEl = document.getElementById('try-wrote'), goEl = document.getElementById('try-go'), outEl = document.getElementById('try-out'), noteEl = document.getElementById('try-note');
-    var pgMoney = function (v) { v = Number(v) || 0; return '$' + (v > 0 && v < 0.01 ? v.toFixed(4) : v.toFixed(2)); };
     var pgEsc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var PG_CHIP = { 'Jev/Important': 'c-imp', 'Jev/Action': 'c-act', 'Jev/Needs Reply': 'c-rep', 'Jev/Review': 'c-rev', 'Jev/Newsletters': 'c-nl', 'Jev/Marketing': 'c-mk', 'Jev/Transactional': 'c-tr', 'Jev/Notifications': 'c-tr', 'Jev/Outreach': 'c-out', 'Jev/Spam': 'c-sp', 'Jev/Invoices': 'c-act' };
     var tryOpen = true;
-    var pgBudget = function (u) {
-      noteEl.innerHTML = 'Your Jev: <b>' + pgMoney(u.visitor_spent_usd) + '</b> of ' + pgMoney(u.visitor_cap_usd) + ' · the playground: <b>' + pgMoney(u.total_spent_usd) + '</b> of ' + pgMoney(u.total_cap_usd);
-    };
-    var pgClosed = function (msg) { tryOpen = false; goEl.disabled = true; noteEl.textContent = msg; };
+    var pgClosed = function (msg) { tryOpen = false; goEl.disabled = true; noteEl.textContent = msg; noteEl.hidden = false; };
     var checkStatus = function () {
       fetch('/api/classify', { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
         .then(function (u) {
           if (u.error) throw u;
-          pgBudget(u);
-          if (!u.open) pgClosed(u.visitor_spent_usd >= u.visitor_cap_usd ? 'You have used your ' + pgMoney(u.visitor_cap_usd) + ' of Jev. Install it and it is yours.' : 'The playground\'s budget is spent. It is closed.');
+          if (!u.open) pgClosed(u.visitor_spent_usd >= u.visitor_cap_usd ? 'You have used your share of Jev here. Install it and it is yours.' : 'The playground\'s budget is spent. It is closed.');
         })
         .catch(function () { pgClosed('The playground is offline right now.'); });
     };
@@ -1003,11 +1007,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       tryIo.observe(tryForm);
     } else checkStatus();
     var samplePills = tryForm.querySelectorAll('[data-sample]');
+    var pgSample = function () { var on = tryForm.querySelector('[data-sample].is-on'); return on ? on.getAttribute('data-sample') : 'pasted'; };
     samplePills.forEach(function (b) {
       b.addEventListener('click', function () {
         var s = SAMPLES.filter(function (x) { return x.id === b.getAttribute('data-sample'); })[0];
         if (!s) return;
         rawEl.value = s.raw; wroteEl.checked = false;
+        track('playground_sample', { sample: s.id });
         samplePills.forEach(function (o) { o.classList.toggle('is-on', o === b); });
       });
     });
@@ -1064,11 +1070,12 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       var row = '<div class="gm"><div class="row"><span class="cb"></span><span class="from u">' + pgEsc(from) + '</span>' + labels.map(function (l) { return '<span class="chip ' + (PG_CHIP[l] || 'c-tr') + '">' + pgEsc(l) + '</span>'; }).join('') + '<span class="subj u">' + pgEsc(subj) + '</span></div></div>';
       var u = d.usage;
       outEl.innerHTML = row + '<p class="t-title">' + pgEsc(pgTitle(d)) + '</p><p class="t-body">' + pgEsc(pgStory(d)) + '</p>' + pgProbs(d) + pgKv(d)
-        + '<p class="t-foot">' + u.input_tokens + ' input tokens · ' + pgMoney(u.cost_usd) + ' · Jev answered in ' + d.timings_ms.jev + ' ms · ' + pgEsc(d.model) + (d.request_id ? ' · ' + pgEsc(d.request_id) : '') + '</p>'
+        + '<p class="t-foot">' + u.input_tokens + ' input tokens · Jev answered in ' + d.timings_ms.jev + ' ms · ' + pgEsc(d.model) + (d.request_id ? ' · ' + pgEsc(d.request_id) : '') + '</p>'
         + '<details><summary>What Jev received</summary><pre>' + pgEsc(JSON.stringify(d.state, null, 2)) + '</pre></details>';
-      pgBudget(u);
+      track('playground_result', { category: d.category, action: d.action, confidence: d.confidence, archive: d.decision.archive, unsubscribe: d.decision.unsubscribe, veto: d.gate.veto || 'none', had_headers: d.signals.had_headers, tokens: u.input_tokens, jev_ms: d.timings_ms.jev, sample: pgSample() });
     };
     var pgFail = function (d) {
+      track('playground_error', { code: d.error || 'unknown' });
       var head = d.error === 'visitor_cap' ? 'That was your fifty cents' : d.error === 'total_cap' ? 'The playground is closed' : d.error === 'rate' ? 'One at a time' : 'No verdict';
       outEl.innerHTML = '<p class="t-title">' + pgEsc(head) + '</p><p class="t-body t-err">' + pgEsc(d.message || 'Something went wrong.') + '</p>' + (d.error === 'visitor_cap' ? '<a class="pill primary" href="#install">Install it, it is free</a>' : '');
       if (d.error === 'visitor_cap' || d.error === 'total_cap') pgClosed(d.message);
@@ -1077,6 +1084,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       var text = rawEl.value;
       if (!text.trim()) { rawEl.focus(); return; }
       goEl.disabled = true; goEl.textContent = 'Asking Jev';
+      track('playground_ask', { sample: pgSample(), wrote_before: wroteEl.checked, chars: Math.round(text.length / 500) * 500 });
       outEl.innerHTML = '<p class="t-foot">Reading the headers, asking Jev<span class="cur"></span></p>';
       fetch('/api/classify', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ raw: text, wrote_before: wroteEl.checked }) })
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
@@ -1130,6 +1138,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       var on = palList.querySelector('.is-on'); if (on && on.scrollIntoView) on.scrollIntoView({ block: 'nearest' });
     };
     var palOpen = function () {
+      track('menu_open');
       palLast = document.activeElement; pal.hidden = false; palQ.value = ''; palIdx = 0; palRender();
       document.documentElement.style.overflow = 'hidden'; palQ.focus();
     };
@@ -1139,6 +1148,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     };
     var palRun = function (it) {
       if (!it) return;
+      track('menu_pick', { item: it.n });
       palClose();
       if (it.run === 'copy') { if (btn) btn.click(); var inst = document.getElementById('install'); if (inst) inst.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
       if (it.run === 'sample') { var b = document.querySelector('[data-sample="pitch"]'); if (b) b.click(); var sec = document.getElementById('try'); if (sec) sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
@@ -1192,6 +1202,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     read.addEventListener('click', function (e) {
       if (!e.target.closest('#jr-undo')) return;
       e.preventDefault();
+      track('footer_undo');
       window.scrollBy({ top: read.getBoundingClientRect().top - window.innerHeight * 0.65, behavior: reduce ? 'auto' : 'smooth' });
     });
   }

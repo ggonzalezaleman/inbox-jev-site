@@ -16,6 +16,15 @@
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
 <meta name="twitter:card" content="summary_large_image">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8HHFT9QVFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8HHFT9QVFZ');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Headline:wght@300&family=Stack+Sans+Text:wght@400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -579,7 +588,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div class="label"><span>Playground</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
-      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
+      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored.</p>
     </div>
     <figure class="win try" data-ui style="margin:0">
       <div class="win-bar"><span>&gt;_</span><span>[ PLAYGROUND ]</span><span class="r">&#8801;</span></div>
@@ -596,7 +605,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
             <label class="try-check"><input type="checkbox" id="try-wrote"> I have written to this sender</label>
             <button type="submit" class="pill primary" id="try-go">Ask Jev</button>
           </div>
-          <p class="try-note" id="try-note">Checking the budget</p>
+          <p class="try-note" id="try-note" hidden></p>
         </form>
         <div class="try-out" id="try-out" aria-live="polite"><p class="t-empty">Nothing decided yet. Take a sample or paste an email, then ask Jev.</p></div>
       </div>
@@ -1057,6 +1066,8 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
 (function () {
   var root = document.documentElement;
   root.classList.add('js');
+  // Analytics: one event per thing a visitor does, never what they typed.
+  var track = function (name, params) { try { if (window.gtag) gtag('event', name, params || {}); } catch (err) {} };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // The eight emails, what the spec says happens to each.
@@ -1098,13 +1109,18 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     document.getElementById('v-ref').textContent = ex.ref;
   }
   flows.forEach(function (svg) {
-    svg.addEventListener('click', function (e) { var m = e.target.closest('.mail'); if (m) select(m.getAttribute('data-ex'), true); });
+    svg.addEventListener('click', function (e) { var m = e.target.closest('.mail'); if (m) { select(m.getAttribute('data-ex'), true); track('example_pick', { example: m.getAttribute('data-ex') }); } });
     svg.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       var m = e.target.closest('.mail'); if (m) { e.preventDefault(); select(m.getAttribute('data-ex'), true); }
     });
   });
   select('ex04', false);
+
+  // Clicks worth counting: the hero's two actions, the nav, the GitHub pills.
+  document.querySelectorAll('.hero .actions a').forEach(function (a) { a.addEventListener('click', function () { track('cta_click', { target: a.getAttribute('href') }); }); });
+  document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { track('nav_click', { target: a.getAttribute('href') }); }); });
+  document.querySelectorAll('.gh .pill').forEach(function (a) { a.addEventListener('click', function () { track('github_click', { kind: a.textContent.trim().split(/\s/)[0].toLowerCase() }); }); });
 
   // Hotkeys, as the nav promises: a letter jumps to its section.
   var keys = {};
@@ -1113,6 +1129,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     var t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     var a = keys[e.key.toLowerCase()]; if (!a) return;
+    track('hotkey', { key: e.key.toLowerCase() });
     var href = a.getAttribute('href');
     if (href.charAt(0) === '#') { var s = document.querySelector(href); if (s) { e.preventDefault(); s.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); } }
     else { window.open(href, '_blank', 'noopener'); }
@@ -1148,7 +1165,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
   // Copy the install command.
   var cmd = document.getElementById('install-cmd'), btn = document.getElementById('copy-btn');
   if (btn) btn.addEventListener('click', function () {
-    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); track('copy_install'); };
     var fallback = function () {
       try { var r = document.createRange(); r.selectNodeContents(cmd); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (err) {}
       btn.textContent = 'Selected, press copy'; setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
@@ -1252,6 +1269,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
       if (doesNarrow.matches) on.insertAdjacentElement('afterend', doesFig); else if (doesFig.parentNode !== doesHost) doesHost.appendChild(doesFig);
     };
     var doesPick = function (row, focusIt) {
+      if (!row.classList.contains('is-on')) track('does_pick', { row: row.querySelector('.does-k').textContent.toLowerCase() });
       doesRows.forEach(function (r) {
         var on = r === row;
         r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
@@ -1280,21 +1298,16 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
   if (tryForm && window.fetch) {
     var SAMPLES = [{"id":"pitch","name":"A cold pitch with one-click unsubscribe","raw":"Delivered-To: you@example.com\nReceived: by 2002:a05:6a10:1234 with SMTP id abc123; Thu, 15 Oct 2026 08:51:02 -0700 (PDT)\nAuthentication-Results: mx.google.com;\n       dkim=pass header.i=@growthagency.example header.s=mail header.b=kF9x2Q1a;\n       spf=pass (google.com: domain of sam@growthagency.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=sam@growthagency.example;\n       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=growthagency.example\nFrom: Sam Lee <sam@growthagency.example>\nTo: you@example.com\nSubject: Re: quick question about your pipeline\nDate: Thu, 15 Oct 2026 15:50:58 +0000\nMessage-ID: <seq-18823-4@growthagency.example>\nList-Unsubscribe: <https://growthagency.example/u/18823/4>, <mailto:unsub-18823@growthagency.example>\nList-Unsubscribe-Post: List-Unsubscribe=One-Click\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"UTF-8\"\n\nHi there,\n\nI'll keep this short. We help B2B teams like yours book 15 to 20 qualified demos a month with a done-for-you outbound engine. No retainers, you only pay for meetings that show up.\n\nWould it make sense to grab 15 minutes this week? Here's my calendar: https://growthagency.example/book/sam\n\nIf not the right time, no worries at all.\n\nSam Lee\nGrowth Partner, Growth Agency\nhttps://growthagency.example\n"},{"id":"receipt","name":"A receipt from a shop","raw":"Delivered-To: you@example.com\nAuthentication-Results: mx.google.com;\n       dkim=pass header.i=@acmestore.example header.s=orders header.b=Z8vQpL3m;\n       spf=pass (google.com: domain of orders@acmestore.example designates 198.51.100.21 as permitted sender) smtp.mailfrom=orders@acmestore.example;\n       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=acmestore.example\nFrom: Acme Store <orders@acmestore.example>\nTo: you@example.com\nSubject: Your order #48213 has shipped\nDate: Wed, 14 Oct 2026 17:02:11 +0000\nMessage-ID: <order-48213-shipped@acmestore.example>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"UTF-8\"\n\nGood news: your order #48213 is on its way.\n\n1 x Desk lamp, brass            $84.00\n2 x LED bulb, warm white        $12.00\nShipping                         $0.00\nTotal charged to card ending 4242: $96.00\n\nTrack your parcel: https://acmestore.example/track/48213\nEstimated delivery: Friday, October 17.\n\nThis is an automated message about an order you placed. Replies are not read.\n\nAcme Store, 12 Market Street, Springfield\n"},{"id":"phish","name":"A \"RE:\" that answers no thread","raw":"Delivered-To: you@example.com\nAuthentication-Results: mx.google.com;\n       dkim=none;\n       spf=softfail (google.com: domain of transitioning noreply@dailywire-news.example does not designate 192.0.2.77 as permitted sender) smtp.mailfrom=noreply@dailywire-news.example;\n       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=dailywire-news.example\nFrom: Permits Office <noreply@dailywire-news.example>\nTo: you@example.com\nSubject: RE: Updated permit schedule for review\nDate: Thu, 15 Oct 2026 03:14:09 +0000\nMessage-ID: <9f1c2d@dailywire-news.example>\nMIME-Version: 1.0\nContent-Type: text/html; charset=\"UTF-8\"\n\n<html><body>\n<p>You have received a new voice letter (0:42).<\/p>\n<p><a href=\"https://files-share-portal.example/play/9f1c2d\">&#9654; Play voice letter<\/a><\/p>\n<p>The updated permit schedule is attached for your review. Please confirm receipt by signing in here: <a href=\"https://login-secure-docs.example/verify\">Review document<\/a><\/p>\n<hr>\n<p>From: Maria Torres<br>Sent: Wednesday<br>To: Daniel Ruiz<br>Subject: permit schedule<\/p>\n<p>Daniel, can you send the updated schedule to the whole list before Thursday? Thanks, Maria<\/p>\n<\/body><\/html>\n"},{"id":"newsletter","name":"A newsletter you subscribed to","raw":"Delivered-To: you@example.com\nAuthentication-Results: mx.google.com;\n       dkim=pass header.i=@weekly.example header.s=news header.b=Qm4nR7tY;\n       spf=pass (google.com: domain of news@weekly.example designates 203.0.113.55 as permitted sender) smtp.mailfrom=bounce@weekly.example;\n       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=weekly.example\nFrom: This Week in Product <news@weekly.example>\nTo: you@example.com\nSubject: This week in product: pricing pages, onboarding, one good chart\nDate: Mon, 13 Oct 2026 12:00:03 +0000\nMessage-ID: <issue-212@weekly.example>\nList-Id: This Week in Product <news.weekly.example>\nList-Unsubscribe: <mailto:unsubscribe-212@weekly.example>, <https://weekly.example/unsubscribe/212>\nList-Unsubscribe-Post: List-Unsubscribe=One-Click\nPrecedence: bulk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"UTF-8\"\n\nIssue 212\n\n1. Pricing pages that explain the plan instead of selling it. A teardown of six pages and what each one leaves out. https://weekly.example/212/pricing\n\n2. Onboarding without a tour. Why the best first run is the product itself, with one example. https://weekly.example/212/onboarding\n\n3. One good chart: retention by signup month, and how to read it. https://weekly.example/212/chart\n\nUntil next Monday.\n\nYou are getting this because you subscribed at weekly.example. Unsubscribe: https://weekly.example/unsubscribe/212\n"}];
     var rawEl = document.getElementById('try-raw'), wroteEl = document.getElementById('try-wrote'), goEl = document.getElementById('try-go'), outEl = document.getElementById('try-out'), noteEl = document.getElementById('try-note');
-    var pgMoney = function (v) { v = Number(v) || 0; return '$' + (v > 0 && v < 0.01 ? v.toFixed(4) : v.toFixed(2)); };
     var pgEsc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var PG_CHIP = { 'Jev/Important': 'c-imp', 'Jev/Action': 'c-act', 'Jev/Needs Reply': 'c-rep', 'Jev/Review': 'c-rev', 'Jev/Newsletters': 'c-nl', 'Jev/Marketing': 'c-mk', 'Jev/Transactional': 'c-tr', 'Jev/Notifications': 'c-tr', 'Jev/Outreach': 'c-out', 'Jev/Spam': 'c-sp', 'Jev/Invoices': 'c-act' };
     var tryOpen = true;
-    var pgBudget = function (u) {
-      noteEl.innerHTML = 'Your Jev: <b>' + pgMoney(u.visitor_spent_usd) + '</b> of ' + pgMoney(u.visitor_cap_usd) + ' · the playground: <b>' + pgMoney(u.total_spent_usd) + '</b> of ' + pgMoney(u.total_cap_usd);
-    };
-    var pgClosed = function (msg) { tryOpen = false; goEl.disabled = true; noteEl.textContent = msg; };
+    var pgClosed = function (msg) { tryOpen = false; goEl.disabled = true; noteEl.textContent = msg; noteEl.hidden = false; };
     var checkStatus = function () {
       fetch('/api/classify', { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
         .then(function (u) {
           if (u.error) throw u;
-          pgBudget(u);
-          if (!u.open) pgClosed(u.visitor_spent_usd >= u.visitor_cap_usd ? 'You have used your ' + pgMoney(u.visitor_cap_usd) + ' of Jev. Install it and it is yours.' : 'The playground\'s budget is spent. It is closed.');
+          if (!u.open) pgClosed(u.visitor_spent_usd >= u.visitor_cap_usd ? 'You have used your share of Jev here. Install it and it is yours.' : 'The playground\'s budget is spent. It is closed.');
         })
         .catch(function () { pgClosed('The playground is offline right now.'); });
     };
@@ -1303,11 +1316,13 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
       tryIo.observe(tryForm);
     } else checkStatus();
     var samplePills = tryForm.querySelectorAll('[data-sample]');
+    var pgSample = function () { var on = tryForm.querySelector('[data-sample].is-on'); return on ? on.getAttribute('data-sample') : 'pasted'; };
     samplePills.forEach(function (b) {
       b.addEventListener('click', function () {
         var s = SAMPLES.filter(function (x) { return x.id === b.getAttribute('data-sample'); })[0];
         if (!s) return;
         rawEl.value = s.raw; wroteEl.checked = false;
+        track('playground_sample', { sample: s.id });
         samplePills.forEach(function (o) { o.classList.toggle('is-on', o === b); });
       });
     });
@@ -1364,11 +1379,12 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
       var row = '<div class="gm"><div class="row"><span class="cb"></span><span class="from u">' + pgEsc(from) + '</span>' + labels.map(function (l) { return '<span class="chip ' + (PG_CHIP[l] || 'c-tr') + '">' + pgEsc(l) + '</span>'; }).join('') + '<span class="subj u">' + pgEsc(subj) + '</span></div></div>';
       var u = d.usage;
       outEl.innerHTML = row + '<p class="t-title">' + pgEsc(pgTitle(d)) + '</p><p class="t-body">' + pgEsc(pgStory(d)) + '</p>' + pgProbs(d) + pgKv(d)
-        + '<p class="t-foot">' + u.input_tokens + ' input tokens · ' + pgMoney(u.cost_usd) + ' · Jev answered in ' + d.timings_ms.jev + ' ms · ' + pgEsc(d.model) + (d.request_id ? ' · ' + pgEsc(d.request_id) : '') + '</p>'
+        + '<p class="t-foot">' + u.input_tokens + ' input tokens · Jev answered in ' + d.timings_ms.jev + ' ms · ' + pgEsc(d.model) + (d.request_id ? ' · ' + pgEsc(d.request_id) : '') + '</p>'
         + '<details><summary>What Jev received</summary><pre>' + pgEsc(JSON.stringify(d.state, null, 2)) + '</pre></details>';
-      pgBudget(u);
+      track('playground_result', { category: d.category, action: d.action, confidence: d.confidence, archive: d.decision.archive, unsubscribe: d.decision.unsubscribe, veto: d.gate.veto || 'none', had_headers: d.signals.had_headers, tokens: u.input_tokens, jev_ms: d.timings_ms.jev, sample: pgSample() });
     };
     var pgFail = function (d) {
+      track('playground_error', { code: d.error || 'unknown' });
       var head = d.error === 'visitor_cap' ? 'That was your fifty cents' : d.error === 'total_cap' ? 'The playground is closed' : d.error === 'rate' ? 'One at a time' : 'No verdict';
       outEl.innerHTML = '<p class="t-title">' + pgEsc(head) + '</p><p class="t-body t-err">' + pgEsc(d.message || 'Something went wrong.') + '</p>' + (d.error === 'visitor_cap' ? '<a class="pill primary" href="#install">Install it, it is free</a>' : '');
       if (d.error === 'visitor_cap' || d.error === 'total_cap') pgClosed(d.message);
@@ -1377,6 +1393,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
       var text = rawEl.value;
       if (!text.trim()) { rawEl.focus(); return; }
       goEl.disabled = true; goEl.textContent = 'Asking Jev';
+      track('playground_ask', { sample: pgSample(), wrote_before: wroteEl.checked, chars: Math.round(text.length / 500) * 500 });
       outEl.innerHTML = '<p class="t-foot">Reading the headers, asking Jev<span class="cur"></span></p>';
       fetch('/api/classify', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ raw: text, wrote_before: wroteEl.checked }) })
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
@@ -1430,6 +1447,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
       var on = palList.querySelector('.is-on'); if (on && on.scrollIntoView) on.scrollIntoView({ block: 'nearest' });
     };
     var palOpen = function () {
+      track('menu_open');
       palLast = document.activeElement; pal.hidden = false; palQ.value = ''; palIdx = 0; palRender();
       document.documentElement.style.overflow = 'hidden'; palQ.focus();
     };
@@ -1439,6 +1457,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     };
     var palRun = function (it) {
       if (!it) return;
+      track('menu_pick', { item: it.n });
       palClose();
       if (it.run === 'copy') { if (btn) btn.click(); var inst = document.getElementById('install'); if (inst) inst.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
       if (it.run === 'sample') { var b = document.querySelector('[data-sample="pitch"]'); if (b) b.click(); var sec = document.getElementById('try'); if (sec) sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
@@ -1492,6 +1511,7 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
     read.addEventListener('click', function (e) {
       if (!e.target.closest('#jr-undo')) return;
       e.preventDefault();
+      track('footer_undo');
       window.scrollBy({ top: read.getBoundingClientRect().top - window.innerHeight * 0.65, behavior: reduce ? 'auto' : 'smooth' });
     });
   }
