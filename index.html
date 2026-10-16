@@ -260,6 +260,29 @@ footer .giant { font-size: var(--hero); letter-spacing: -0.07em; line-height: 0.
 .read .r-ref a:hover { text-decoration: underline; }
 footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 
+/* Three frames: a terminal, an app in its browser, a file in its editor. */
+.win.app .win-bar { grid-template-columns: auto 1fr auto; gap: 12px; }
+.win.app .win-bar .url { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.85; }
+.win.app .win-body { background: #fff; background-image: none; }
+.win.app .win-body::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff); pointer-events: none; z-index: 1; }
+.win.code .win-body { background-image: none; }
+.win.code pre.yaml { display: flex; padding-left: 0; }
+.win.code pre.yaml .gut { flex: none; width: 40px; padding-right: 10px; margin-right: 14px; text-align: right; color: var(--muted-2); border-right: 1px solid var(--line); user-select: none; }
+.win.code pre.yaml .code { flex: 1; min-width: 0; }
+@media (min-width: 761px) {
+  .win.app { font-size: 15px; }
+  .win.app .gm .row { height: 48px; gap: 12px; padding: 0 16px; }
+  .win.app .gm .cb { width: 16px; height: 16px; }
+  .win.app .gm .from { width: 150px; }
+  .win.app .gm .chip { font-size: 12px; line-height: 18px; padding: 0 7px; }
+  .win.app .gm .time { font-size: 13px; width: 64px; }
+  .win.app .labels .l { height: 40px; line-height: 40px; }
+  .win.app .labels .n { font-size: 13px; }
+  .win.app .slack { font-size: 15px; padding: 18px 20px; }
+  .win.app .slack h4 { font-size: 15px; }
+  .win.app .slack table { font-size: 14px; }
+}
+
 /* What it does: six rows, one window. */
 .does { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: start; border-top: 1px solid var(--line); }
 .does-list { display: flex; flex-direction: column; }
@@ -273,11 +296,9 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 .does-row.is-on h3 { color: var(--accent); }
 .does-row p { color: var(--muted); margin: 8px 0 0; max-width: 44ch; }
 .does-win { position: sticky; top: 24px; margin-top: 24px; }
-.does-win .win-body { flex: none; height: 460px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); }
-.does-pane { position: absolute; inset: 0; overflow: hidden; }
-.does-pane > * { position: absolute; left: 0; right: 0; top: 0; }
+.does-win .win-body { flex: none; min-height: 360px; }
+.does-pane { position: relative; }
 .js .does-pane:not(.is-on) { display: none; }
-.does-pane .gm .time { display: none; }
 
 /* The playground: an email in, the pass's decision out. */
 .try .win-body { display: grid; grid-template-columns: 5fr 7fr; }
@@ -417,7 +438,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .does { grid-template-columns: 1fr; gap: 0; }
   .does-row { min-height: 0; display: block; }
   .does-win { position: static; margin: 16px 0 24px; }
-  .does-win .win-body { height: 300px; }
+  .does-win .win-body { min-height: 0; }
   .try .win-body { grid-template-columns: 1fr; }
   .try-in { border-right: 0; border-bottom: 1px solid var(--line); }
   .flow-desktop { display: none; }
@@ -433,7 +454,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   .pair > div + div { border-left: 0; padding-left: 0; margin-left: 0; }
 }
 @media (max-width: 760px) {
-  .does-win .win-body { height: 240px; }
+  .does-pane .gm .time { display: none; }
   .does-row { padding: 16px 12px 18px 16px; }
   .nav .k-desk { display: none; } .nav .k-phone { display: inline; }
   .palette { padding-top: 8vh; }
@@ -515,7 +536,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     <div>
       <div class="label"><span>The inbox, after one pass</span></div>
       <div class="feat">
-        <figure class="win shutter" data-ui style="margin:0"><div class="win-bar"><span>&gt;_</span><span>[ INBOX ]</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.03">
+        <figure class="win shutter app" data-ui style="margin:0"><div class="win-bar"><span>&#8592; &#8594;</span><span class="url">mail.google.com/mail/u/0/#inbox</span><span class="r">&#8801;</span></div><div class="win-body drift" data-k="-0.03">
         <div class="gm">
           <div class="row"><span class="cb"></span><span class="from u">Ana Diaz</span><span class="chip c-imp">Jev/Important</span><span class="chip c-rep">Jev/Needs Reply</span><span class="subj u">Signed contract by Friday? <span>— Hi, can you confirm the signature date so…</span></span><span class="time">9:04 AM</span></div>
           <div class="row sel"><span class="cb"></span><span class="from u">Acme Bank</span><span class="chip c-act">Jev/Action</span><span class="subj u">Approve payment to Acme Supplies <span>— A payment of $2,400.00 is waiting for your…</span></span><span class="time">8:51 AM</span></div>
@@ -844,10 +865,10 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-digest" id="tab-digest" data-rise style="--i:4"><span class="does-k">Digest</span><h3>One Slack message every morning</h3><p>At 08:00: what needs you, what it archived, which lists it unsubscribed you from and what it learned. Short enough for a phone.</p></div>
         <div class="does-row" role="tab" tabindex="-1" aria-selected="false" aria-controls="does-modes" id="tab-modes" data-rise style="--i:5"><span class="does-k">Undo</span><h3>Everything it does can be undone</h3><p>Every decision is in SQLite. Watch it in dry_run, then label, before act moves anything. One command brings a day's mail back.</p></div>
       </div>
-      <figure class="win does-win" data-ui style="margin:0" data-rise>
-        <div class="win-bar"><span>&gt;_</span><span>[ LABELS ]</span><span class="r">&#8801;</span></div>
+      <figure class="win does-win app" data-ui style="margin:0" data-rise>
+        <div class="win-bar"><span>&#8592; &#8594;</span><span class="url">mail.google.com/mail/u/0/#inbox</span><span class="r">&#8801;</span></div>
         <div class="win-body">
-          <div class="does-pane is-on" id="does-labels" role="tabpanel" aria-labelledby="tab-labels"><div class="labels">
+          <div class="does-pane is-on" id="does-labels" data-kind="app" data-url="mail.google.com/mail/u/0/#inbox" role="tabpanel" aria-labelledby="tab-labels"><div class="labels">
           <div class="l sel"><span>Jev/Action</span><span class="n">5</span></div>
           <div class="l"><span>Jev/Important</span><span class="n">4</span></div>
           <div class="l"><span>Jev/Needs Reply</span><span class="n">3</span></div>
@@ -857,7 +878,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
           <div class="l"><span>Jev/Notifications</span><span class="n"></span></div>
           <div class="l"><span>Jev/Newsletters</span><span class="n"></span></div>
         </div></div>
-          <div class="does-pane" id="does-archive" role="tabpanel" aria-labelledby="tab-archive"><pre class="term"><span class="d">09:10:05</span> message processed category=<i>transactional</i> confidence=0.97 action=archive
+          <div class="does-pane" id="does-archive" data-kind="term" role="tabpanel" aria-labelledby="tab-archive"><pre class="term"><span class="d">09:10:05</span> message processed category=<i>transactional</i> confidence=0.97 action=archive
 <span class="d">09:10:07</span> message processed category=<i>notification</i> confidence=0.55 action=archive archive_group=true
 <span class="d">09:10:08</span> message processed category=<i>newsletter</i> confidence=0.88 action=archive
 <span class="d">09:10:09</span> message processed category=<i>marketing</i> confidence=0.94 action=archive_unsubscribe
@@ -868,7 +889,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <span class="d">09:10:17</span> message processed category=<i>marketing</i> confidence=0.73 action=archive archive_group=true
 <span class="d">09:10:18</span> message processed category=<i>newsletter</i> confidence=0.96 action=archive
 <span class="d">09:10:19</span> run finished processed=14 archived=9 unsubscribed=1 review=1 errors=0</pre></div>
-          <div class="does-pane" id="does-gate" role="tabpanel" aria-labelledby="tab-gate"><div class="gate">
+          <div class="does-pane" id="does-gate" data-kind="term" role="tabpanel" aria-labelledby="tab-gate"><div class="gate">
           <div class="q">cold_outreach at 0.96, bar is 0.90</div>
           <div class="q">dmarc=pass in Gmail's Authentication-Results</div>
           <div class="q">List-Unsubscribe + List-Unsubscribe-Post present</div>
@@ -877,20 +898,25 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
           <div class="q">mode act, 3 of 10 unsubscribes left this run</div>
           <div class="then">POST https://unsub.sequencer.example/u/abc <i>List-Unsubscribe=One-Click</i> → 200</div>
         </div></div>
-          <div class="does-pane" id="does-learns" role="tabpanel" aria-labelledby="tab-learns"><div class="gm">
+          <div class="does-pane" id="does-learns" data-kind="app" data-url="mail.google.com/mail/u/0/#inbox" role="tabpanel" aria-labelledby="tab-learns"><div class="gm">
           <div class="row"><span class="cb"></span><span class="from">Weekly Product</span><span class="chip c-nl" style="text-decoration: line-through; opacity:.6">Jev/Newsletters</span><span class="chip c-imp">Jev/Important</span><span class="subj">This week in product <span>— Label changed by you</span></span><span class="time">Oct 8</span></div>
           <div class="row sel"><span class="cb"></span><span class="from u">Weekly Product</span><span class="chip c-imp">Jev/Important</span><span class="subj u">This week in product <span>— Decided by your rule, a week later</span></span><span class="time">Oct 15</span></div>
           <div class="row"><span class="cb"></span><span class="from">Brand Studio</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Announcing our spring collection <span>— Jev/Review removed by you: suggestion accepted</span></span><span class="time">Oct 9</span></div>
           <div class="row"><span class="cb"></span><span class="from">Brand Studio</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Autumn lookbook <span>— Archived by your rule</span></span><span class="time">Oct 14</span></div>
           <div class="row"><span class="cb"></span><span class="from u">Sam Lee</span><span class="chip c-out">Jev/Outreach</span><span class="subj u">Re: quick question <span>— Rule from three Jev answers at 0.96</span></span><span class="time">Oct 12</span></div>
-        </div></div>
-          <div class="does-pane" id="does-digest" role="tabpanel" aria-labelledby="tab-digest"><div class="slack"><div class="who"><span class="av">jev</span><span><b>inbox-jev</b><span class="app">APP</span><span class="ts">8:00 AM</span></span></div>
+          <div class="row"><span class="cb"></span><span class="from">Daily Deals</span><span class="chip c-mk" style="text-decoration: line-through; opacity:.6">Jev/Marketing</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Weekend picks <span>— Label changed by you</span></span><span class="time">Oct 10</span></div>
+          <div class="row"><span class="cb"></span><span class="from">Daily Deals</span><span class="chip c-nl">Jev/Newsletters</span><span class="subj">Weekday picks <span>— Decided by your rule</span></span><span class="time">Oct 13</span></div>
+          <div class="row"><span class="cb"></span><span class="from u">Sam Lee</span><span class="chip c-out">Jev/Outreach</span><span class="subj u">Following up <span>— Archived by your rule, Jev not asked</span></span><span class="time">Oct 15</span></div>
+          <div class="row"><span class="cb"></span><span class="from u">Acme Bank</span><span class="chip c-act">Jev/Action</span><span class="chip c-rep">Jev/Needs Reply</span><span class="subj u">Approve payment to Acme Supplies <span>— Keep rule: Jev still asked whether it needs you</span></span><span class="time">Oct 15</span></div>
+        </div>
+</div>
+          <div class="does-pane" id="does-digest" data-kind="app" data-url="app.slack.com/client · inbox-jev" role="tabpanel" aria-labelledby="tab-digest"><div class="slack"><div class="who"><span class="av">jev</span><span><b>inbox-jev</b><span class="app">APP</span><span class="ts">8:00 AM</span></span></div>
         <p><b>3 emails need you</b></p><p class="ctx">you@example.com · last 24h · mode: act</p>
         <h4>Needs reply (2)</h4>
         <ul><li><a href="#top">Signed contract by Friday?</a> · Ana Diaz · 3h ago</li><li><a href="#top">Can we move Thursday?</a> · Marta Ruiz · 19h ago</li></ul>
         <h4>What Jev did · last 24h</h4>
         <table><tr><td>Jev/Notifications</td><td>31</td></tr><tr><td>Jev/Marketing</td><td>9</td></tr><tr><td>Jev/Newsletters</td><td>7</td></tr><tr><td>Jev/Transactional</td><td>6</td></tr><tr><td>To review</td><td>1</td></tr><tr><td><b>Processed</b></td><td><b>64</b></td></tr></table></div></div>
-          <div class="does-pane" id="does-modes" role="tabpanel" aria-labelledby="tab-modes"><pre class="term"><b>$ inbox-jev run --mode dry_run --limit 30</b>
+          <div class="does-pane" id="does-modes" data-kind="term" role="tabpanel" aria-labelledby="tab-modes"><pre class="term"><b>$ inbox-jev run --mode dry_run --limit 30</b>
 <span class="d">dry run: records decisions, touches nothing</span>
 processed=30 would_archive=19 would_unsubscribe=3 review=2
 
@@ -920,7 +946,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
       <aside class="side" data-rise style="--i:0">
         <div>
           <div class="label"><span>categories.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ categories.yaml ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
+          <div class="win code" data-ui><div class="win-bar"><span>{ }</span><span>categories.yaml</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># categories.yaml: the defaults, yours to edit</span>
 <span class="k">categories:</span>
   - <span class="k">key:</span> marketing
     <span class="k">label:</span> Jev/Marketing
@@ -933,7 +959,7 @@ labels removed: Jev/Newsletters, Jev/Marketing, Jev/Notifications
         </div>
         <div>
           <div class="label"><span>accounts.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ accounts.yaml ]</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
+          <div class="win code" data-ui><div class="win-bar"><span>{ }</span><span>accounts.yaml</span><span class="r">&#8801;</span></div><div class="win-body"><pre class="yaml"><span class="c"># accounts.yaml</span>
 <span class="k">accounts:</span>
   - <span class="k">email:</span> you@example.com
     <span class="k">mode:</span> act
@@ -1119,6 +1145,15 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
   });
   select('ex04', false);
 
+  // Line numbers for the files shown in an editor frame.
+  document.querySelectorAll('.win.code pre.yaml').forEach(function (pre) {
+    var code = document.createElement('span'); code.className = 'code';
+    while (pre.firstChild) code.appendChild(pre.firstChild);
+    var n = code.textContent.replace(/\n$/, '').split('\n').length, gut = document.createElement('span'); gut.className = 'gut';
+    for (var i = 1; i <= n; i++) gut.appendChild(document.createTextNode(i + (i < n ? '\n' : '')));
+    pre.appendChild(gut); pre.appendChild(code);
+  });
+
   // Clicks worth counting: the hero's two actions, the nav, the GitHub pills.
   document.querySelectorAll('.hero .actions a').forEach(function (a) { a.addEventListener('click', function () { track('cta_click', { target: a.getAttribute('href') }); }); });
   document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { track('nav_click', { target: a.getAttribute('href') }); }); });
@@ -1277,7 +1312,14 @@ processed=30 would_archive=19 would_unsubscribe=3 review=2</pre></div></figure>
         r.classList.toggle('is-on', on); r.setAttribute('aria-selected', on ? 'true' : 'false'); r.setAttribute('tabindex', on ? '0' : '-1');
         var pane = document.getElementById(r.getAttribute('aria-controls')); if (pane) pane.classList.toggle('is-on', on);
       });
-      if (doesBar) doesBar.textContent = '[ ' + row.querySelector('.does-k').textContent.toUpperCase() + ' ]';
+      var pane = document.getElementById(row.getAttribute('aria-controls')), kind = pane ? pane.getAttribute('data-kind') : 'term';
+      doesFig.classList.toggle('app', kind === 'app');
+      var bar = doesFig.querySelector('.win-bar');
+      if (bar) {
+        var left = bar.children[0], mid = bar.children[1];
+        if (kind === 'app') { left.innerHTML = '&#8592; &#8594;'; mid.className = 'url'; mid.textContent = pane.getAttribute('data-url'); }
+        else { left.textContent = '>_'; mid.className = ''; mid.textContent = '[ ' + row.querySelector('.does-k').textContent.toUpperCase() + ' ]'; }
+      }
       doesPlace();
       if (focusIt) row.focus();
     };
