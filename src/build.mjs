@@ -196,7 +196,8 @@ const tpl = readFileSync(here('./template.src.html'), 'utf8')
   .replace(/^<title>.*<\/title>\n<meta name="claude:[^>]*>\n/, '')
   .replace(/\{\{frag:([a-z]+)\}\}/g, (_, n) => frag(n))
   .replace('<!--DIAGRAM-DESKTOP-->', desktop())
-  .replace('<!--DIAGRAM-PHONE-->', phone());
+  .replace('<!--DIAGRAM-PHONE-->', phone())
+  .replace('{{samples}}', () => JSON.stringify(JSON.parse(readFileSync(here('./samples.json'), 'utf8'))).replace(/<\//g, '<\\/'));
 if (tpl.includes('{{frag')) throw new Error('unresolved fragment');
 const cut = tpl.indexOf('</style>') + '</style>'.length;
 const html = `<!doctype html>

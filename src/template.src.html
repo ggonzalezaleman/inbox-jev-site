@@ -247,6 +247,42 @@ footer .giant { font-size: var(--hero); letter-spacing: -0.07em; line-height: 0.
 .read .r-ref a:hover { text-decoration: underline; }
 footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 
+/* The playground: an email in, the pass's decision out. */
+.try .win-body { display: grid; grid-template-columns: 5fr 7fr; }
+.try-in { display: flex; flex-direction: column; gap: 12px; padding: 20px 24px 24px; border-right: 1px solid var(--line); min-width: 0; }
+.try-samples { display: flex; flex-wrap: wrap; gap: 8px; }
+.try-samples .pill { min-height: 32px; padding: 0 12px; font-size: 13px; }
+.try-samples .pill.is-on { background: var(--surface-2); }
+.try textarea { width: 100%; flex: 1; min-height: 280px; resize: vertical; background: var(--surface); color: var(--ink); border: 1px solid var(--line-2); border-radius: 2px; padding: 12px 14px; font: 400 12.5px/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; overflow: auto; }
+.try textarea:focus { outline: none; border-color: var(--accent); }
+.try textarea::placeholder { color: var(--muted-2); }
+.try-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.try-check { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.try-check input { accent-color: var(--accent); width: 14px; height: 14px; margin: 0; }
+.try-note { margin: 0; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted-2); }
+.try-note b { font-weight: 400; color: var(--amber); }
+.try-out { padding: 20px 24px 24px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.try-out .t-empty { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.45; }
+.try-out .gm { border-radius: 2px; overflow: hidden; }
+.try-out .gm .row { border-bottom: 0; }
+.try-out .t-title { font-family: var(--display); font-weight: 300; letter-spacing: -0.04em; font-size: var(--md); line-height: 1.1; color: var(--ink-strong); margin: 0; }
+.try-out .t-body { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.45; }
+.try-out .t-err { color: var(--amber); }
+.try-out .t-prob { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 12px; align-items: center; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted); }
+.try-out .t-prob i { display: block; height: 2px; background: var(--line-2); position: relative; }
+.try-out .t-prob i b { position: absolute; left: 0; top: 0; height: 2px; background: var(--accent); }
+.try-out .t-prob i.is-top b { background: var(--amber); }
+.try-out .t-prob span:nth-child(3n) { color: var(--amber); font-weight: 400; }
+.try-out .t-kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; }
+.try-out .t-kv dt { color: var(--muted-2); text-transform: uppercase; }
+.try-out .t-kv dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.try-out .t-foot { margin: 0; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted-2); overflow-wrap: anywhere; }
+.try-out details { border-top: 1px solid var(--line); padding-top: 10px; }
+.try-out summary { cursor: pointer; font-family: var(--mono); font-weight: 300; font-size: 13px; letter-spacing: -0.012em; text-transform: uppercase; color: var(--muted); }
+.try-out pre { margin: 10px 0 0; font: 400 12.5px/1.6 var(--mono); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; }
+.try-out .pill { align-self: flex-start; }
+[data-ui] .gm .chip.c-sp { background: #fce8e6; color: #a50e0e; }
+
 /* Interface fragments: the product's own conventions apply inside [data-ui]. */
 [data-ui] { font-family: var(--text); font-size: 13px; line-height: 1.45; }
 [data-ui] pre { margin: 0; }
@@ -255,7 +291,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 [data-ui] pre.term i { color: var(--accent); font-style: normal; }
 [data-ui] pre.term .d { color: var(--muted-2); }
 [data-ui] pre.term .ln { display: block; }
-[data-ui] pre.term .cur { display: inline-block; width: 7px; height: 13px; background: var(--accent); vertical-align: -2px; margin-left: 2px; }
+[data-ui] .cur { display: inline-block; width: 7px; height: 13px; background: var(--accent); vertical-align: -2px; margin-left: 2px; }
 [data-ui] pre.yaml .k { color: var(--accent); }
 [data-ui] pre.yaml .c { color: var(--muted-2); }
 [data-ui] pre.tbl { font-variant-numeric: tabular-nums; }
@@ -317,7 +353,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   @keyframes pop { from { opacity: 0; transform: scale(0.7); } }
   [data-ui] pre.term .ln { animation: ln 180ms var(--ease-out); }
   @keyframes ln { from { opacity: 0; transform: translateY(3px); } }
-  [data-ui] pre.term .cur { animation: blink 1s steps(2, start) infinite; }
+  [data-ui] .cur { animation: blink 1s steps(2, start) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
   .drift { will-change: transform; }
 }
@@ -325,6 +361,8 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 
 /* Tablet and phone: a second composition */
 @media (max-width: 1100px) {
+  .try .win-body { grid-template-columns: 1fr; }
+  .try-in { border-right: 0; border-bottom: 1px solid var(--line); }
   .flow-desktop { display: none; }
   .flow-phone { display: block; max-width: 560px; margin: 0 auto; }
   .verdict { grid-template-columns: 1fr; gap: 6px; }
@@ -397,6 +435,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <nav class="wrap nav" aria-label="Page">
   <span class="mark" aria-hidden="true"></span>
   <a href="#how" data-key="h"><span class="k">[H]</span>How it decides</a>
+  <a href="#try" data-key="t"><span class="k">[T]</span>Try it</a>
   <a href="#does" data-key="w"><span class="k">[W]</span>What it does</a>
   <a href="#categories" data-key="c"><span class="k">[C]</span>Categories</a>
   <a href="#questions" data-key="q"><span class="k">[Q]</span>Questions</a>
@@ -498,36 +537,67 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   </div>
 </section>
 
+<!-- ============================ Playground ============================ -->
+<section class="block" id="try">
+  <div class="wrap">
+    <div class="label"><span>Playground</span><span>Fig. 4</span></div>
+    <div class="head">
+      <h2 data-rise style="--i:0">Try it on an email<span class="count">(live)</span></h2>
+      <p data-rise style="--i:1">Paste an email, or take a sample, and the published package decides it here the way a pass would: the headers' signals, what Jev gets, Jev's answer and the policy's verdict, for an inbox with no rules and the default categories. What you paste goes to a function on this site and on to TypeSafe under the author's key, and is not stored. Each visitor gets fifty cents of Jev, a few thousand emails.</p>
+    </div>
+    <figure class="win try" data-ui style="margin:0">
+      <div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ]</span><span class="r">&#8801;</span></div>
+      <div class="win-body">
+        <form class="try-in" id="try-form" novalidate>
+          <div class="try-samples" role="group" aria-label="Sample emails">
+            <button type="button" class="pill" data-sample="pitch">A cold pitch</button>
+            <button type="button" class="pill" data-sample="receipt">A receipt</button>
+            <button type="button" class="pill" data-sample="phish">A fake reply</button>
+            <button type="button" class="pill" data-sample="newsletter">A newsletter</button>
+          </div>
+          <textarea id="try-raw" rows="14" spellcheck="false" autocomplete="off" aria-label="The email" placeholder="Paste an email here. Best with its headers: in Gmail, open the message, then ⋮ → Show original → Copy to clipboard. Plain text works too, without the sender checks."></textarea>
+          <div class="try-row">
+            <label class="try-check"><input type="checkbox" id="try-wrote"> I have written to this sender</label>
+            <button type="submit" class="pill primary" id="try-go">Ask Jev</button>
+          </div>
+          <p class="try-note" id="try-note">Checking the budget</p>
+        </form>
+        <div class="try-out" id="try-out" aria-live="polite"><p class="t-empty">Nothing decided yet. Take a sample or paste an email, then ask Jev.</p></div>
+      </div>
+    </figure>
+  </div>
+</section>
+
 <!-- ============================ What it does ============================ -->
 <section class="block" id="does">
   <div class="wrap">
-    <div class="label"><span>What it does</span><span>Fig. 4 to 9</span></div>
+    <div class="label"><span>What it does</span><span>Fig. 5 to 10</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">What it does to your inbox<span class="count">(6)</span></h2>
     </div>
     <div class="cells">
       <article class="cell text-top" data-rise style="--i:0">
         <div class="cell-text"><div class="label"><span>Labels</span></div><h3>One Gmail label per category</h3><p>The eight categories each get a label under the Jev/ prefix. Three more can appear next to them: Jev/Needs Reply, Jev/Invoices, and Jev/Review for the emails Jev isn't sure about. You can rename them or add a category in categories.yaml without touching code.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 4 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:labels}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:labels}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:1">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 5 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:archlog}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:archlog}}</div></div></div>
         <div class="cell-text"><div class="label"><span>Archive</span></div><h3>Archives what has nothing for you to do</h3><p>Receipts, notifications, newsletters, promotions and pitches are archived once Jev is at least 0.80 sure, or 0.90 for the two categories it also unsubscribes from. Below the bar the email stays in the inbox with Jev/Review and the label Jev would have used.</p></div>
       </article>
       <article class="cell text-top" data-rise style="--i:2">
         <div class="cell-text"><div class="label"><span>Unsubscribe</span></div><h3>Unsubscribes only from senders it can verify</h3><p>It unsubscribes only from marketing and cold outreach, when Jev is at least 0.90 sure, the sender passes DMARC and sends a List-Unsubscribe header, the sender is not a group or anyone you have written to, and the account is in act mode. If the sender offers RFC 8058 one-click it uses that, otherwise the mailto: address, otherwise it leaves the link in your digest.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 6 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:gate}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:gate}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:3">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 7 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:learns}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:learns}}</div></div></div>
         <div class="cell-text"><div class="label"><span>Corrections</span></div><h3>Learns from your corrections</h3><p>When you swap a label, remove Jev/Review or move an archived email back to the inbox, the next pass records the correction and writes a rule for that sender. Jev's own answers make a rule too, after three of the same category at 0.95 or more. Starred mail is left alone.</p></div>
       </article>
       <article class="cell text-top" data-rise style="--i:4">
         <div class="cell-text"><div class="label"><span>Digest</span></div><h3>One Slack message every morning</h3><p>At 08:00 it sends a Slack message, in English or Spanish, with the emails that need you, what it archived, which lists it unsubscribed you from and what it learned from your corrections. It is short enough to read on a phone.</p></div>
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 8 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:digest}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 9 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:digest}}</div></div></div>
       </article>
       <article class="cell frag-top" data-rise style="--i:5">
-        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 9 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:modes}}</div></div></div>
+        <div class="frag"><div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 10 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:modes}}</div></div></div>
         <div class="cell-text"><div class="label"><span>Undo</span></div><h3>Everything it does can be undone</h3><p>Each decision is stored in SQLite with its confidence and the probabilities Jev gave. You can run it in dry_run for a week and read what it would have done, then in label, which only adds labels, before you let act move anything. One command moves a day's archived mail back to the inbox.</p></div>
       </article>
     </div>
@@ -537,7 +607,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ Categories ============================ -->
 <section class="block" id="categories">
   <div class="wrap">
-    <div class="label"><span>Categories</span><span>Fig. 10 and 11</span></div>
+    <div class="label"><span>Categories</span><span>Fig. 11 and 12</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Categories<span class="count">(8)</span></h2>
       <p data-rise style="--i:1">These are the defaults the package ships with, and they are one person's preferences. You can change the criteria, the bars and the actions, or add a category, in your own copy of categories.yaml.</p>
@@ -546,11 +616,11 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       <aside class="side" data-rise style="--i:0">
         <div>
           <div class="label"><span>categories.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 10 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:catyaml}}</div></div>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 11 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:catyaml}}</div></div>
         </div>
         <div>
           <div class="label"><span>accounts.yaml</span></div>
-          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 11 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:accyaml}}</div></div>
+          <div class="win" data-ui><div class="win-bar"><span>&gt;_</span><span>[ FIG. 12 ]</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:accyaml}}</div></div>
         </div>
       </aside>
       <div class="ledger" data-rise style="--i:1">
@@ -612,7 +682,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
 <!-- ============================ Install ============================ -->
 <section class="block" id="install">
   <div class="wrap">
-    <div class="label"><span>Install</span><span>Fig. 12</span></div>
+    <div class="label"><span>Install</span><span>Fig. 13</span></div>
     <div class="head">
       <h2 data-rise style="--i:0">Install it in two commands</h2>
       <p data-rise style="--i:1">It is free, MIT licensed, and runs on your own machine. You need a TypeSafe API key and a Google OAuth client of your own, and the setup wizard walks you through both. Slack is optional. Your email goes to Google and to TypeSafe, and to no other server.</p>
@@ -626,7 +696,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div class="copy"><code id="install-cmd"><span class="nw">uv tool install inbox-jev</span> &amp;&amp; <span class="nw">inbox-jev init</span></code><button type="button" class="pill" id="copy-btn">Copy</button></div>
         <p class="small">If you run it from a checkout of the repo, it uses the checkout. <a class="link" href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/operations.md">Run it on a server with Docker</a></p>
       </div>
-      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 12 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:init}}</div></figure>
+      <figure class="win" data-ui style="margin:0" data-rise><div class="win-bar"><span>&gt;_</span><span>[ FIG. 13 ] inbox-jev init</span><span class="r">&#8801;</span></div><div class="win-body">{{frag:init}}</div></figure>
     </div>
     <div class="more">
       <a href="https://github.com/hellolitebox/litebox-inbox-jev/blob/main/docs/guide.md" data-rise style="--i:0"><span class="m-k">Guide</span><span class="m-t">The guide in plain words, for the person whose inbox it sorts</span><span class="m-a" aria-hidden="true">&#8599;</span></a>
@@ -843,6 +913,118 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
     window.addEventListener('resize', fit);
   }
 
+  // The playground: one email in, the pass's decision out, with Jev's real answer.
+  var tryForm = document.getElementById('try-form');
+  if (tryForm && window.fetch) {
+    var SAMPLES = {{samples}};
+    var rawEl = document.getElementById('try-raw'), wroteEl = document.getElementById('try-wrote'), goEl = document.getElementById('try-go'), outEl = document.getElementById('try-out'), noteEl = document.getElementById('try-note');
+    var pgMoney = function (v) { v = Number(v) || 0; return '$' + (v > 0 && v < 0.01 ? v.toFixed(4) : v.toFixed(2)); };
+    var pgEsc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    var PG_CHIP = { 'Jev/Important': 'c-imp', 'Jev/Action': 'c-act', 'Jev/Needs Reply': 'c-rep', 'Jev/Review': 'c-rev', 'Jev/Newsletters': 'c-nl', 'Jev/Marketing': 'c-mk', 'Jev/Transactional': 'c-tr', 'Jev/Notifications': 'c-tr', 'Jev/Outreach': 'c-out', 'Jev/Spam': 'c-sp', 'Jev/Invoices': 'c-act' };
+    var tryOpen = true;
+    var pgBudget = function (u) {
+      noteEl.innerHTML = 'Your Jev: <b>' + pgMoney(u.visitor_spent_usd) + '</b> of ' + pgMoney(u.visitor_cap_usd) + ' · the playground: <b>' + pgMoney(u.total_spent_usd) + '</b> of ' + pgMoney(u.total_cap_usd);
+    };
+    var pgClosed = function (msg) { tryOpen = false; goEl.disabled = true; noteEl.textContent = msg; };
+    var checkStatus = function () {
+      fetch('/api/classify', { headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (u) {
+          if (u.error) throw u;
+          pgBudget(u);
+          if (!u.open) pgClosed(u.visitor_spent_usd >= u.visitor_cap_usd ? 'You have used your ' + pgMoney(u.visitor_cap_usd) + ' of Jev. Install it and it is yours.' : 'The playground\'s budget is spent. It is closed.');
+        })
+        .catch(function () { pgClosed('The playground is offline right now.'); });
+    };
+    if ('IntersectionObserver' in window) {
+      var tryIo = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { tryIo.disconnect(); checkStatus(); } }, { rootMargin: '300px' });
+      tryIo.observe(tryForm);
+    } else checkStatus();
+    var samplePills = tryForm.querySelectorAll('[data-sample]');
+    samplePills.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var s = SAMPLES.filter(function (x) { return x.id === b.getAttribute('data-sample'); })[0];
+        if (!s) return;
+        rawEl.value = s.raw; wroteEl.checked = false;
+        samplePills.forEach(function (o) { o.classList.toggle('is-on', o === b); });
+      });
+    });
+    rawEl.addEventListener('input', function () { samplePills.forEach(function (o) { o.classList.remove('is-on'); }); });
+    var pgFromName = function (v) { var m = /^\s*"?([^"<]*?)"?\s*<([^>]+)>/.exec(v || ''); return m ? (m[1].trim() || m[2]) : (v || ''); };
+    var pgTitle = function (d) {
+      var dec = d.decision, L = d.label, s = d.signals;
+      if (dec.spam) return 'Moved to Spam with Jev/Spam';
+      if (dec.low_confidence) return 'Stays in the inbox with Jev/Review and ' + L;
+      if (dec.archive) return 'Archived with ' + L + (dec.archive_group ? ', through the archive group' : dec.unsubscribe ? (s.one_click ? ', unsubscribed with one click' : s.unsubscribe_https.length ? ', unsubscribed' : ', unsubscribed by email') : '');
+      return 'Stays in the inbox with ' + L + (dec.add_labels.indexOf(d.needs_reply.label) >= 0 ? ' and ' + d.needs_reply.label : '');
+    };
+    var pgStory = function (d) {
+      var dec = d.decision, g = d.gate, s = d.signals, cat = d.category.replace(/_/g, ' '), c = d.confidence.toFixed(2), bar = d.threshold.toFixed(2), out = [];
+      if (d.action === 'keep') out.push('Jev says ' + cat + ' at ' + c + '. A keep category has no bar to clear, so it stays where it is.');
+      else if (dec.spam) out.push('Jev says spam at ' + c + ', above the ' + bar + ' bar, so it goes to Gmail\'s Spam.');
+      else if (dec.archive_group) out.push('Jev says ' + cat + ' at ' + c + ', below its ' + bar + ' bar, but the archive categories together are sure enough that it leaves the inbox under the strongest of them. The group never unsubscribes.');
+      else if (dec.low_confidence) out.push('Jev says ' + cat + ' at ' + c + ', below its ' + bar + ' bar, so nothing moves: it stays in the inbox with Jev/Review and its best guess, for you to confirm.');
+      else {
+        out.push('Jev says ' + cat + ' at ' + c + ', above its ' + bar + ' bar, so it is archived.');
+        if (d.action === 'archive_unsubscribe') {
+          if (dec.unsubscribe) out.push('The sender passes DMARC in Gmail\'s own header, the email has a List-Unsubscribe header' + (s.one_click ? ' with one-click (RFC 8058)' : s.unsubscribe_https.length ? '' : ' with a mailto: address') + ', and you never wrote to them, so it unsubscribes too.');
+          else if (g.veto === 'known contact') out.push('You have written to this sender, so it is never unsubscribed: an opt-out could cover all of their mail.');
+          else if (g.veto === 'unverified sender') out.push(s.auth_results ? 'No DMARC pass in Gmail\'s own header, so it is archived but not unsubscribed.' : 'Without the headers there is no DMARC verdict, so it is archived but not unsubscribed.');
+          else if (g.veto === 'group or own list') out.push('It came through a group or a discussion list, so no unsubscribe.');
+          else if (!s.unsubscribe_https.length && !s.unsubscribe_mailto.length) out.push('No List-Unsubscribe header, so there is nothing to click.');
+          else out.push('Not unsubscribed' + (g.veto ? ': ' + g.veto + '.' : '.'));
+        }
+      }
+      if (!dec.spam && dec.add_labels.indexOf(d.needs_reply.label) >= 0) out.push('Jev thinks the sender expects something from you (' + d.needs_reply.value.toFixed(2) + '), so it also gets ' + d.needs_reply.label + '.');
+      Object.keys(d.tags || {}).forEach(function (k) { var t = d.tags[k]; if (dec.add_labels.indexOf(t.label) >= 0) out.push('It carries ' + t.label + ' (' + t.value.toFixed(2) + ').'); });
+      return out.join(' ');
+    };
+    var pgProbs = function (d) {
+      var keys = Object.keys(d.probabilities).slice(0, 4);
+      return '<div class="t-prob">' + keys.map(function (k, i) { var p = d.probabilities[k]; return '<span>' + pgEsc(k.replace(/_/g, ' ')) + '</span><i' + (i === 0 ? ' class="is-top"' : '') + '><b style="width:' + Math.round(p * 100) + '%"></b></i><span>' + p.toFixed(2) + '</span>'; }).join('')
+        + '<span>needs reply</span><i><b style="width:' + Math.round(d.needs_reply.value * 100) + '%"></b></i><span>' + d.needs_reply.value.toFixed(2) + '</span></div>';
+    };
+    var pgKv = function (d) {
+      var s = d.signals, rows = [];
+      rows.push(['Sender', s.sender + (s.relayed_by ? ' via ' + s.relayed_by : '')]);
+      rows.push(['DMARC', s.dmarc_pass ? 'pass, in Gmail\'s own header' : s.auth_results ? 'no pass' : 'unknown, no Authentication-Results header']);
+      rows.push(['List-Unsubscribe', s.one_click ? 'one-click (RFC 8058)' : s.unsubscribe_https.length ? 'a link' + (s.unsubscribe_mailto.length ? ' and a mailto:' : '') : s.unsubscribe_mailto.length ? 'a mailto:' : 'none']);
+      rows.push(['Links to', s.link_domains.length ? s.link_domains.join(', ') : 'nothing']);
+      if (s.reply_without_thread) rows.push(['Subject', 'claims a reply but answers no thread']);
+      if (s.list_id) rows.push(['List-Id', s.list_id]);
+      if (s.is_discussion_list) rows.push(['List-Post', 'a discussion list']);
+      rows.push(['You wrote to them', s.previous_contact === 'never' ? 'never' : 'yes']);
+      return '<dl class="t-kv">' + rows.map(function (r) { return '<dt>' + pgEsc(r[0]) + '</dt><dd>' + pgEsc(r[1]) + '</dd>'; }).join('') + '</dl>';
+    };
+    var pgRender = function (d) {
+      var labels = d.plan.add_labels.filter(function (l) { return l !== 'Jev/Processed' && l !== 'SPAM'; });
+      var from = pgFromName((d.state && d.state.from) || d.signals.sender), subj = (d.state && d.state.subject) || '(no subject)';
+      var row = '<div class="gm"><div class="row"><span class="cb"></span><span class="from u">' + pgEsc(from) + '</span>' + labels.map(function (l) { return '<span class="chip ' + (PG_CHIP[l] || 'c-tr') + '">' + pgEsc(l) + '</span>'; }).join('') + '<span class="subj u">' + pgEsc(subj) + '</span></div></div>';
+      var u = d.usage;
+      outEl.innerHTML = row + '<p class="t-title">' + pgEsc(pgTitle(d)) + '</p><p class="t-body">' + pgEsc(pgStory(d)) + '</p>' + pgProbs(d) + pgKv(d)
+        + '<p class="t-foot">' + u.input_tokens + ' input tokens · ' + pgMoney(u.cost_usd) + ' · Jev answered in ' + d.timings_ms.jev + ' ms · ' + pgEsc(d.model) + (d.request_id ? ' · ' + pgEsc(d.request_id) : '') + '</p>'
+        + '<details><summary>What Jev received</summary><pre>' + pgEsc(JSON.stringify(d.state, null, 2)) + '</pre></details>';
+      pgBudget(u);
+    };
+    var pgFail = function (d) {
+      var head = d.error === 'visitor_cap' ? 'That was your fifty cents' : d.error === 'total_cap' ? 'The playground is closed' : d.error === 'rate' ? 'One at a time' : 'No verdict';
+      outEl.innerHTML = '<p class="t-title">' + pgEsc(head) + '</p><p class="t-body t-err">' + pgEsc(d.message || 'Something went wrong.') + '</p>' + (d.error === 'visitor_cap' ? '<a class="pill primary" href="#install">Install it, it is free</a>' : '');
+      if (d.error === 'visitor_cap' || d.error === 'total_cap') pgClosed(d.message);
+    };
+    var pgAsk = function () {
+      var text = rawEl.value;
+      if (!text.trim()) { rawEl.focus(); return; }
+      goEl.disabled = true; goEl.textContent = 'Asking Jev';
+      outEl.innerHTML = '<p class="t-foot">Reading the headers, asking Jev<span class="cur"></span></p>';
+      fetch('/api/classify', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ raw: text, wrote_before: wroteEl.checked }) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) { if (res.ok) pgRender(res.d); else pgFail(res.d); })
+        .catch(function () { pgFail({ error: 'network', message: 'Could not reach the playground. Try again in a moment.' }); })
+        .then(function () { if (tryOpen) goEl.disabled = false; goEl.textContent = 'Ask Jev'; });
+    };
+    tryForm.addEventListener('submit', function (e) { e.preventDefault(); pgAsk(); });
+  }
+
   // The footer reads this page the way Jev would: the score climbs with the scroll and the verdict lands at the bar.
   var read = document.getElementById('jev-read');
   if (read) {
@@ -864,10 +1046,10 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       return atEnd ? 1 : Math.max(0, Math.min(1, (vh - top) / (vh * 0.7)));
     };
     var score = function (p) { return p < 0.75 ? 0.5 + 0.4 * p / 0.75 : BAR + 0.06 * (p - 0.75) / 0.25; };
-    var pending = false;
+    var frameQueued = false;
     var tick = function () {
-      if (pending) return; pending = true;
-      requestAnimationFrame(function () { render(score(progress())); pending = false; });
+      if (frameQueued) return; frameQueued = true;
+      requestAnimationFrame(function () { render(score(progress())); frameQueued = false; });
     };
     window.addEventListener('scroll', tick, { passive: true });
     window.addEventListener('resize', tick);
