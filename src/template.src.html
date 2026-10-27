@@ -134,7 +134,7 @@ section.block { padding-block: 120px 0; }
 .flow .out.is-on rect { fill: var(--accent); stroke: var(--accent); }
 .flow .out.is-on text { fill: var(--accent-ink); }
 .flow .route { fill: none; stroke: var(--muted-2); stroke-opacity: 0.7; stroke-width: 3; transition: stroke-opacity var(--t-hover) ease, stroke var(--t-hover) ease; }
-.flow.has-sel .route { stroke-opacity: 0.3; }
+.flow.has-sel .route { stroke-opacity: 0; }
 .flow.has-sel .route.is-on { stroke: var(--accent); stroke-opacity: 1; stroke-width: 5; }
 .flow.has-sel .mail:not(.is-on) text, .flow.has-sel .out:not(.is-on) .o2 { fill: var(--muted); }
 .flowfig figcaption { font-size: 14px; color: var(--muted); margin-top: 14px; max-width: 72ch; }
@@ -603,7 +603,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div><p class="v-subj" id="v-subj">Re: quick question about your pipeline · sam@growthagency.example</p><p class="v-title" id="v-title">Archived with Jev/Outreach, unsubscribed with one click</p></div>
         <div><p class="v-body" id="v-body">Jev says cold outreach at 0.96, above the 0.90 bar. The sender passes DMARC in Gmail's own headers, the email has a List-Unsubscribe header, the sender isn't a group or anyone you have written to, and the account is in act mode, so one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.</p><p class="v-ref" id="v-ref">Spec example EX-04. A test with the same id runs the real code.</p></div>
       </div></div>
-      <figcaption>The spec's per-email pipeline, with its two flowcharts drawn as one. Allowlisted senders and senders with a rule never reach Jev. The unsubscribe gate sits on the two bottom archive rows and is spelled out under "What it does".</figcaption>
     </figure>
     <div class="after">
       <div class="steps">

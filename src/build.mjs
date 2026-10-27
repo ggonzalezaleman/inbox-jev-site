@@ -100,14 +100,10 @@ function desktop() {
   return `<svg class="flow flow-desktop" viewBox="0 0 ${W} ${H}" role="img" aria-label="Eight real emails traced through inbox-jev: your rules decide first, the rest go to Jev, then policy turns Jev's confidence into an action.">
   <text x="0" y="22" class="cap">Eight emails from the spec · pick one</text>
   ${groupLabels.join('\n  ')}
-  <text x="${jev.x + 18}" y="34" class="cap">Decided by a rule: Jev is not asked</text>
-  <text x="${(rules.x + rules.w + jev.x) / 2}" y="${H - 6}" class="cap" text-anchor="middle">no rule</text>
-  <text x="${(jev.x + jev.w + pol.x) / 2}" y="${H - 6}" class="cap" text-anchor="middle">category + confidence</text>
-  <text x="${(pol.x + pol.w + outs.x) / 2}" y="${H - 6}" class="cap" text-anchor="middle">action</text>
   <g class="routes">${routes.join('\n  ')}</g>
-  ${bar(rules, 'Your rules', ['the allowlist and', 'the sender rules', 'learned from your', 'corrections.', '', 'A match decides', 'the category', 'on the spot.'])}
-  ${bar(jev, 'Jev', ['gets the headers,', 'the first lines,', 'the domains links', "point to, Gmail's", 'auth verdicts, and', 'whether you ever', 'wrote to them.', '', 'Answers one', 'category and', 'how sure it is.'])}
-  ${bar(pol, 'Policy', ['At or above the', "category's bar", '(0.80, 0.90):', 'its action.', '', 'Archive categories', 'plus spam, together', 'reach 0.90:', 'archived.', '', 'Anything else:', 'stays, Jev/Review.'])}
+  ${bar(rules, 'Your rules', ['A match skips Jev.'])}
+  ${bar(jev, 'Jev', ['A category and', 'how sure it is.'])}
+  ${bar(pol, 'Policy', ['The confidence', 'picks the action.'])}
   <g class="pile">${pileRows.join('\n  ')}</g>
   <g class="outs">${outRows.join('\n  ')}</g>
 </svg>`;
@@ -175,12 +171,10 @@ function phone() {
   <text x="${outs.x}" y="${outs.y0 - 8}" class="cap">Stays in the inbox</text>
   <text x="${outs.x}" y="${outY[3] - 8}" class="cap">Leaves the inbox</text>
   <text x="${outs.x}" y="${outY[8] - 8}" class="cap">Gmail's spam folder</text>
-  <text x="${outs.x}" y="${rules.y + 16}" class="cap">Decided by a rule:</text>
-  <text x="${outs.x}" y="${rules.y + 32}" class="cap">Jev is not asked</text>
   <g class="routes">${routes.join('\n  ')}</g>
-  ${bar(rules, 'Your rules', ['the allowlist and the', 'sender rules learned', 'from your corrections'])}
-  ${bar(jev, 'Jev', ['sees headers, first', 'lines, link domains,', 'auth verdicts and', 'whether you wrote', 'to them. Answers a', 'category and how', 'sure it is.'])}
-  ${bar(pol, 'Policy', ["Above the category's", 'bar (0.80 / 0.90):', 'its action. Archive', 'categories + spam', 'at 0.90: archived.', 'Else stays, with', 'Jev/Review.'])}
+  ${bar(rules, 'Your rules', ['A match skips Jev.'])}
+  ${bar(jev, 'Jev', ['A category and', 'how sure it is.'])}
+  ${bar(pol, 'Policy', ['The confidence', 'picks the action.'])}
   <g class="pile">${pileRows.join('\n  ')}</g>
   <g class="outs">${outRows.join('\n  ')}</g>
 </svg>`;

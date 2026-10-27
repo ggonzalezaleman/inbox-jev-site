@@ -159,7 +159,7 @@ section.block { padding-block: 120px 0; }
 .flow .out.is-on rect { fill: var(--accent); stroke: var(--accent); }
 .flow .out.is-on text { fill: var(--accent-ink); }
 .flow .route { fill: none; stroke: var(--muted-2); stroke-opacity: 0.7; stroke-width: 3; transition: stroke-opacity var(--t-hover) ease, stroke var(--t-hover) ease; }
-.flow.has-sel .route { stroke-opacity: 0.3; }
+.flow.has-sel .route { stroke-opacity: 0; }
 .flow.has-sel .route.is-on { stroke: var(--accent); stroke-opacity: 1; stroke-width: 5; }
 .flow.has-sel .mail:not(.is-on) text, .flow.has-sel .out:not(.is-on) .o2 { fill: var(--muted); }
 .flowfig figcaption { font-size: 14px; color: var(--muted); margin-top: 14px; max-width: 72ch; }
@@ -651,10 +651,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <text x="960" y="22" class="cap">Stays in the inbox</text>
   <text x="960" y="177" class="cap">Leaves the inbox</text>
   <text x="960" y="419" class="cap">Gmail's spam folder</text>
-  <text x="560" y="34" class="cap">Decided by a rule: Jev is not asked</text>
-  <text x="524" y="484" class="cap" text-anchor="middle">no rule</text>
-  <text x="710" y="484" class="cap" text-anchor="middle">category + confidence</text>
-  <text x="919" y="484" class="cap" text-anchor="middle">action</text>
   <g class="routes"><path class="route" data-for="ex15a" d="M 320 50 H 508 Q 518 50 518 40 V 58 Q 518 48 528 48 H 905 C 932 48, 930 50, 960 50" />
   <path class="route" data-for="ex02" d="M 320 94 H 878 C 922 94, 916 94, 960 94" />
   <path class="route" data-for="ex04" d="M 320 138 H 878 C 922 138, 916 380, 960 380" />
@@ -665,13 +661,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <path class="route" data-for="ex16" d="M 320 358 H 878 C 922 358, 916 138, 960 138" /></g>
   <g class="gate"><rect x="356" y="30" width="150" height="436" />
     <text x="368" y="54" class="g1">Your rules</text>
-    <text x="368" y="76" class="g2">the allowlist and</text><text x="368" y="92" class="g2">the sender rules</text><text x="368" y="108" class="g2">learned from your</text><text x="368" y="124" class="g2">corrections.</text><text x="368" y="140" class="g2"></text><text x="368" y="156" class="g2">A match decides</text><text x="368" y="172" class="g2">the category</text><text x="368" y="188" class="g2">on the spot.</text></g>
+    <text x="368" y="76" class="g2">A match skips Jev.</text></g>
   <g class="gate"><rect x="542" y="80" width="150" height="386" />
     <text x="554" y="104" class="g1">Jev</text>
-    <text x="554" y="126" class="g2">gets the headers,</text><text x="554" y="142" class="g2">the first lines,</text><text x="554" y="158" class="g2">the domains links</text><text x="554" y="174" class="g2">point to, Gmail's</text><text x="554" y="190" class="g2">auth verdicts, and</text><text x="554" y="206" class="g2">whether you ever</text><text x="554" y="222" class="g2">wrote to them.</text><text x="554" y="238" class="g2"></text><text x="554" y="254" class="g2">Answers one</text><text x="554" y="270" class="g2">category and</text><text x="554" y="286" class="g2">how sure it is.</text></g>
+    <text x="554" y="126" class="g2">A category and</text><text x="554" y="142" class="g2">how sure it is.</text></g>
   <g class="gate"><rect x="728" y="80" width="150" height="386" />
     <text x="740" y="104" class="g1">Policy</text>
-    <text x="740" y="126" class="g2">At or above the</text><text x="740" y="142" class="g2">category's bar</text><text x="740" y="158" class="g2">(0.80, 0.90):</text><text x="740" y="174" class="g2">its action.</text><text x="740" y="190" class="g2"></text><text x="740" y="206" class="g2">Archive categories</text><text x="740" y="222" class="g2">plus spam, together</text><text x="740" y="238" class="g2">reach 0.90:</text><text x="740" y="254" class="g2">archived.</text><text x="740" y="270" class="g2"></text><text x="740" y="286" class="g2">Anything else:</text><text x="740" y="302" class="g2">stays, Jev/Review.</text></g>
+    <text x="740" y="126" class="g2">The confidence</text><text x="740" y="142" class="g2">picks the action.</text></g>
   <g class="pile"><g class="mail" role="button" tabindex="0" data-ex="ex15a" aria-label="Signed contract by Friday?, from ana@client.example">
       <rect x="0" y="30" width="320" height="40" />
       <text x="12" y="47" class="t1">Signed contract by Friday?</text>
@@ -745,8 +741,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <text x="204" y="532" class="cap">Stays in the inbox</text>
   <text x="204" y="694" class="cap">Leaves the inbox</text>
   <text x="204" y="948" class="cap">Gmail's spam folder</text>
-  <text x="204" y="436" class="cap">Decided by a rule:</text>
-  <text x="204" y="452" class="cap">Jev is not asked</text>
   <g class="routes"><path class="route" data-for="ex15a" d="M 30 372 C 30 396, 18 396, 18 420 L 18 450 L 160 450 C 196 450, 168 561, 204 561" />
   <path class="route" data-for="ex02" d="M 77 372 C 77 396, 33 396, 33 420 L 33 810 L 160 810 C 196 810, 168 607, 204 607" />
   <path class="route" data-for="ex04" d="M 124 372 C 124 396, 48 396, 48 420 L 48 822 L 160 822 C 196 822, 168 907, 204 907" />
@@ -757,13 +751,13 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <path class="route" data-for="ex16" d="M 359 372 C 359 396, 123 396, 123 420 L 123 882 L 160 882 C 196 882, 168 653, 204 653" /></g>
   <g class="gate"><rect x="0" y="420" width="160" height="100" />
     <text x="12" y="444" class="g1">Your rules</text>
-    <text x="12" y="464" class="g2">the allowlist and the</text><text x="12" y="480" class="g2">sender rules learned</text><text x="12" y="496" class="g2">from your corrections</text></g>
+    <text x="12" y="464" class="g2">A match skips Jev.</text></g>
   <g class="gate"><rect x="0" y="576" width="160" height="164" />
     <text x="12" y="600" class="g1">Jev</text>
-    <text x="12" y="620" class="g2">sees headers, first</text><text x="12" y="636" class="g2">lines, link domains,</text><text x="12" y="652" class="g2">auth verdicts and</text><text x="12" y="668" class="g2">whether you wrote</text><text x="12" y="684" class="g2">to them. Answers a</text><text x="12" y="700" class="g2">category and how</text><text x="12" y="716" class="g2">sure it is.</text></g>
+    <text x="12" y="620" class="g2">A category and</text><text x="12" y="636" class="g2">how sure it is.</text></g>
   <g class="gate"><rect x="0" y="778" width="160" height="164" />
     <text x="12" y="802" class="g1">Policy</text>
-    <text x="12" y="822" class="g2">Above the category's</text><text x="12" y="838" class="g2">bar (0.80 / 0.90):</text><text x="12" y="854" class="g2">its action. Archive</text><text x="12" y="870" class="g2">categories + spam</text><text x="12" y="886" class="g2">at 0.90: archived.</text><text x="12" y="902" class="g2">Else stays, with</text><text x="12" y="918" class="g2">Jev/Review.</text></g>
+    <text x="12" y="822" class="g2">The confidence</text><text x="12" y="838" class="g2">picks the action.</text></g>
   <g class="pile"><g class="mail" role="button" tabindex="0" data-ex="ex15a" aria-label="Signed contract by Friday?, from ana@client.example">
       <rect x="0" y="24" width="390" height="40" />
       <text x="12" y="41" class="t1">Signed contract by Friday?</text>
@@ -837,7 +831,6 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         <div><p class="v-subj" id="v-subj">Re: quick question about your pipeline · sam@growthagency.example</p><p class="v-title" id="v-title">Archived with Jev/Outreach, unsubscribed with one click</p></div>
         <div><p class="v-body" id="v-body">Jev says cold outreach at 0.96, above the 0.90 bar. The sender passes DMARC in Gmail's own headers, the email has a List-Unsubscribe header, the sender isn't a group or anyone you have written to, and the account is in act mode, so one POST with List-Unsubscribe=One-Click (RFC 8058) ends the sequence.</p><p class="v-ref" id="v-ref">Spec example EX-04. A test with the same id runs the real code.</p></div>
       </div></div>
-      <figcaption>The spec's per-email pipeline, with its two flowcharts drawn as one. Allowlisted senders and senders with a rule never reach Jev. The unsubscribe gate sits on the two bottom archive rows and is spelled out under "What it does".</figcaption>
     </figure>
     <div class="after">
       <div class="steps">
