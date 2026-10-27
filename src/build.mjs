@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 export const SITE = 'https://inboxjev.dev';
-const DESCRIPTION = "inbox-jev sorts your Gmail with the Jev classifier: it labels new email, archives what you don't need to read, moves scams to Spam and unsubscribes you from marketing and cold pitches. It learns from your corrections. Free, MIT licensed, runs on your own machine.";
+const DESCRIPTION = "inbox-jev labels your Gmail with the Jev classifier and archives what you don't need. It also moves scams to Spam, unsubscribes you from marketing and cold pitches, and learns from your corrections. Free, MIT licensed, runs on your own machine.";
 
 // Outcome rows (index → label, action, group)
 const OUT = [
