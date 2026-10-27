@@ -500,7 +500,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
   <span class="cross tl" aria-hidden="true">+</span><span class="cross tr" aria-hidden="true">+</span>
   <span class="cross bl" aria-hidden="true">+</span><span class="cross br" aria-hidden="true">+</span>
   <h1 data-rise style="--i:0">inbox-jev</h1>
-  <p class="sub" data-rise style="--i:1">Every ten minutes it labels your new mail with Jev, archives what has nothing for you to do and unsubscribes you from pitches it can verify.</p>
+  <p class="sub" data-rise style="--i:1">Sorts your Gmail with Jev: it labels new email, archives what you don't need to read and unsubscribes you from marketing and cold pitches.</p>
   <div class="actions" data-rise style="--i:2">
     <a class="pill primary" href="#try">Try it on an email</a>
     <a class="pill" href="#install">Install in two commands</a>
@@ -609,7 +609,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       <div class="steps">
         <div data-rise style="--i:1"><div class="label"><span>Your rules first</span></div><h3>Your rules decide first</h3><p>An allowlisted sender, or a sender with a rule, is decided without asking Jev. Rules come from your corrections, from <code>rules set</code>, or appear on their own after Jev has answered the same category three times at 0.95 or more.</p></div>
         <div data-rise style="--i:2"><div class="label"><span>Then Jev</span></div><h3>Jev reads the headers and the first lines</h3><p>It also gets the domains the links point to, Gmail's own SPF, DKIM and DMARC verdicts, and whether you have ever written to the sender. It never gets a full URL, and the body is never stored. It answers with one category and how sure it is.</p></div>
-        <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>The confidence picks the action</h3><p>If it reaches the category's bar, that category's action runs. If several archive categories add up to 0.90, the email is archived under the strongest of them. Anything else stays in the inbox with Jev/Review.</p></div>
+        <div data-rise style="--i:3"><div class="label"><span>Then policy</span></div><h3>The confidence picks the action</h3><p>If it reaches the category's bar, that category's action runs. If the archive categories and spam add up to 0.90, the email is archived under the strongest archive category, never moved to Spam. Anything else stays in the inbox with Jev/Review.</p></div>
       </div>
     </div>
   </div>
@@ -696,7 +696,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
         </div></details>
         <details><summary><span class="tag">Spam</span><span class="name">Jev/Spam</span><span class="conf">Bar 0.90</span></summary><div class="body">
           <div class="kv"><span>Action</span><span>moved to Gmail's Spam</span></div>
-          <p class="desc">Scams and phishing: a reply that answers no thread, links to domains unrelated to the sender, a conversation between other people pasted into a message to you, an authentication pass that proves a domain other than the one it claims. Below 0.90 it stays in the inbox with Jev/Review, already labeled, for you to confirm.</p>
+          <p class="desc">Scams and phishing: a reply that answers no thread, a calendar invitation or response with no invite in it, links to domains unrelated to the sender, a conversation between other people pasted into a message to you, an authentication pass that proves a domain other than the one it claims. Below 0.90 it stays in the inbox with Jev/Review, already labeled, for you to confirm.</p>
         </div></details>
       </div>
     </div>
@@ -1121,6 +1121,7 @@ footer.is-decided .giant { color: var(--muted); transform: translateX(2%); }
       rows.push(['List-Unsubscribe', s.one_click ? 'one-click (RFC 8058)' : s.unsubscribe_https.length ? 'a link' + (s.unsubscribe_mailto.length ? ' and a mailto:' : '') : s.unsubscribe_mailto.length ? 'a mailto:' : 'none']);
       rows.push(['Links to', s.link_domains.length ? s.link_domains.join(', ') : 'nothing']);
       if (s.reply_without_thread) rows.push(['Subject', 'claims a reply but answers no thread']);
+      if (s.calendar_subject_without_invite) rows.push(['Subject', 'looks like a calendar invite but has none']);
       if (s.list_id) rows.push(['List-Id', s.list_id]);
       if (s.is_discussion_list) rows.push(['List-Post', 'a discussion list']);
       rows.push(['You wrote to them', s.previous_contact === 'never' ? 'never' : 'yes']);

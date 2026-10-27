@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 export const SITE = 'https://inboxjev.dev';
-const DESCRIPTION = "inbox-jev reads your Gmail every ten minutes, labels each email with the Jev classifier, archives receipts, notifications, newsletters and pitches, unsubscribes from the pitches it can verify, and learns from your corrections. Free, MIT licensed, runs on your own machine.";
+const DESCRIPTION = "inbox-jev sorts your Gmail with the Jev classifier: it labels new email, archives what you don't need to read, moves scams to Spam and unsubscribes you from marketing and cold pitches. It learns from your corrections. Free, MIT licensed, runs on your own machine.";
 
 // Outcome rows (index → label, action, group)
 const OUT = [
@@ -107,7 +107,7 @@ function desktop() {
   <g class="routes">${routes.join('\n  ')}</g>
   ${bar(rules, 'Your rules', ['the allowlist and', 'the sender rules', 'learned from your', 'corrections.', '', 'A match decides', 'the category', 'on the spot.'])}
   ${bar(jev, 'Jev', ['gets the headers,', 'the first lines,', 'the domains links', "point to, Gmail's", 'auth verdicts, and', 'whether you ever', 'wrote to them.', '', 'Answers one', 'category and', 'how sure it is.'])}
-  ${bar(pol, 'Policy', ['At or above the', "category's bar", '(0.80, 0.90):', 'its action.', '', 'Archive categories', 'that together', 'reach 0.90:', 'archived.', '', 'Anything else:', 'stays, Jev/Review.'])}
+  ${bar(pol, 'Policy', ['At or above the', "category's bar", '(0.80, 0.90):', 'its action.', '', 'Archive categories', 'plus spam, together', 'reach 0.90:', 'archived.', '', 'Anything else:', 'stays, Jev/Review.'])}
   <g class="pile">${pileRows.join('\n  ')}</g>
   <g class="outs">${outRows.join('\n  ')}</g>
 </svg>`;
@@ -180,7 +180,7 @@ function phone() {
   <g class="routes">${routes.join('\n  ')}</g>
   ${bar(rules, 'Your rules', ['the allowlist and the', 'sender rules learned', 'from your corrections'])}
   ${bar(jev, 'Jev', ['sees headers, first', 'lines, link domains,', 'auth verdicts and', 'whether you wrote', 'to them. Answers a', 'category and how', 'sure it is.'])}
-  ${bar(pol, 'Policy', ["Above the category's", 'bar (0.80 / 0.90):', 'its action. Archive', 'categories together', 'at 0.90: archived.', 'Else stays, with', 'Jev/Review.'])}
+  ${bar(pol, 'Policy', ["Above the category's", 'bar (0.80 / 0.90):', 'its action. Archive', 'categories + spam', 'at 0.90: archived.', 'Else stays, with', 'Jev/Review.'])}
   <g class="pile">${pileRows.join('\n  ')}</g>
   <g class="outs">${outRows.join('\n  ')}</g>
 </svg>`;
