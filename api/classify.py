@@ -354,6 +354,8 @@ def classify(data: dict[str, Any], req_headers: dict[str, str]) -> dict[str, Any
             "is_discussion_list": sig.is_discussion_list,
             "relayed_by": sig.relayed_by,
             "reply_without_thread": reply_without_thread(email.header("Subject"), email.headers),
+            # build_state computes it (inbox-jev >= 0.1.1, ADR 0059); the panel only shows it.
+            "calendar_subject_without_invite": bool(state.get("calendar_subject_without_invite")),
             "link_domains": email.link_domains,
             "previous_contact": previous.value,
         },
